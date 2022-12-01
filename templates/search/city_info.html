@@ -173,7 +173,7 @@
         $data = "";
         $c_id = $(this).attr("c_id");
         $name = $(this).attr("name");
-        $cat = $(this).attr("name");
+        $cat = $(this).attr("cat");
         $office_str = "<tr class='wishlist-item' id='list_id_" + $c_id + "'><td class='w-pname'>" + $name +", " + $cat + "</td><td class='w-premove' wpid='" + $c_id + "'>x</td></tr>";
         //check if the element is in the array
         if ($.inArray($c_id, wish_list) == -1) {
@@ -182,13 +182,6 @@
                 wish_list.push($office_str);
                 //  localStorage.setItem(wishlistkey, JSON.stringify(wish_list))
                show_message($name + " Added");
-          }else{
-               var myIndex = wish_list.indexOf($office_str);
-               if (myIndex!==-1)
-               wish_list.splice(myIndex, 1);
-               $("#wish_list_item").remove();
-               show_message("Removed");
-               count_items_in_wishlist_update();
           }
         }
         count_items_in_wishlist_update();
@@ -234,9 +227,6 @@
       }
     }
 
-    function star(icon){
-        $(icon).toggleClass('fas far');
-    }
 </script>
 
 </head>
@@ -255,10 +245,7 @@
 <div id='msg'></div>
 <div id='wish_list' class='col-s'>
   <p class="wish_list_heading">
-    <i class="fa fa-heart-o"></i>
-    <span id='p_label'>Wishlist (</span>
-    <span id='listitem'>0</span>
-    <span id='p_label'>)</span>
+    <span id='p_label'>Wishlist</span>
   </p>
   <table id='wish_list_item' border='0'></table>
 </div>
@@ -388,13 +375,10 @@
                     <h5 class="card-title">{{ place.name }}</h5>
                     <p class="card-text">{{ place.location.formatted_address }}</p>
                 </div>
+                <div class='wishlist' title="Add To Wishlist" name={{place.name}} cat = {{place.categories.0.name}} office_id='location'>
                 <div class="card-footer">
                     {{ place.categories.0.name }}
-                    <div class="btn-group">
-                     <button class='wishlist' title="Add To Wishlist" name={{place.name}} cat = {{place.categories.0.name}} office_id='location'>
-                         <span><i class="far fa-star" onClick="star(this)"></i></span>
-                     </button>
-                    </div>
+                </div>
                 </div>
             </div>
         {% endfor %}

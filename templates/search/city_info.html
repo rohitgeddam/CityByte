@@ -67,13 +67,177 @@
             margin: 0;
             border: none;
         }
+
+        button a {
+          color: #fff !important;
+        }
+
+        button {
+          font-family: 'open sans', sans-serif;
+          font-size: 15px;
+        }
+
+        button {
+          text-align: center;
+          padding: 1px 7px;
+          margin: 0 5px 0;
+          border: 4px solid #000;
+          background-color: #000;
+          vertical-align: middle;
+          cursor: pointer;
+          white-space: nowrap;
+          font-size: 35px;
+          color: #fff;
+        }
+
+        #wish_list {
+          position: fixed;
+          bottom: 0px;
+          right: 0px;
+          height: 35px;
+          width: 400px;
+          background: #fff;
+          border: 3px solid #22a7c5;
+          z-index: 3;
+        }
+
+        #wish_list .wish_list_heading {
+          margin: 0px 0px;
+          text-align: center;
+          color: #fff;
+          height: 27px;
+          background-color: #22a7c5;
+          padding: 6px 3px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 18px;
+        }
+
+        #wish_list_item {
+          width: 100%;
+          text-align: center;
+          border-spacing: 0px 4px;
+          border-collapse: separate;
+        }
+
+        #msg {
+          position: fixed;
+          display: none;
+          padding: 10px 25px;
+          background: #22a7c5;
+          border: 1px solid #22a7c5;
+          font-size: 18px;
+          width: 50%;
+          text-align: center;
+          font-weight: 700;
+          color: #fff;
+          z-index: 4;
+        }
+
+        .wishlist-item {
+          padding: 10px 5px;
+          background: #f1f1f1;
+          color: #323470;
+        }
+
+        .w-premove {
+          font-size: 20px;
+          cursor: pointer;
+          width: 7%;
+          padding-bottom: 4px;
+        }
+
+        .w-pname {
+          font-size: 16px;
+          width: 93%;
+          text-align: left;
+          padding-left: 12px;
+        }
     </style>
 
-    <script type = "text/javascript">
-        function star(icon){
-            $(icon).toggleClass('fas far');
+<script type = "text/javascript">
+    var wishlistkey = "wishlist";
+    // try and fetch an existing wishlist from the localStorage.
+    var wish_list = []; // localStorage.getItem(wishlistkey)
+
+    if ($.isEmptyObject(wish_list)) { //nothing was saved previously
+      wish_list = new Array()
+    } else {
+      wish_list = JSON.parse(wish_list);
+      count_items_in_wishlist_update();
+      $('#wish_list_item').html(wish_list);
+    }
+
+    $(document).ready(function() {
+      $(".wishlist").on("click", function() {
+        $data = "";
+        $c_id = $(this).attr("c_id");
+        $name = $(this).attr("name");
+        $cat = $(this).attr("name");
+        $office_str = "<tr class='wishlist-item' id='list_id_" + $c_id + "'><td class='w-pname'>" + $name +", " + $cat + "</td><td class='w-premove' wpid='" + $c_id + "'>x</td></tr>";
+        //check if the element is in the array
+        if ($.inArray($c_id, wish_list) == -1) {
+          if(!wish_list.includes($office_str)){
+                $("#wish_list_item").append($office_str);
+                wish_list.push($office_str);
+                //  localStorage.setItem(wishlistkey, JSON.stringify(wish_list))
+               show_message($name + " Added");
+          }else{
+               var myIndex = wish_list.indexOf($office_str);
+               if (myIndex!==-1)
+               wish_list.splice(myIndex, 1);
+               $("#wish_list_item").remove();
+               show_message("Removed");
+               count_items_in_wishlist_update();
+          }
         }
-    </script>
+        count_items_in_wishlist_update();
+      });
+
+      //adding toggle functionality to the wishlist pannel
+      $(".wish_list_heading").on("click", function() {
+        if (!$(this).hasClass("up")) {
+          $("#wish_list").css("height", "390px");
+          $(this).addClass("up");
+          $("#wish_list").css("overflow", "auto");
+        } else {
+          $("#wish_list").css("height", "35px");
+          $(this).removeClass("up");
+          $("#wish_list").css("overflow", "hidden");
+        }
+
+      });
+    // Remove function
+      $("#wish_list_item").on("click", ".w-premove", function() {
+        $c_id = $(this).attr("wpid");
+        $("#list_id_" + $c_id).remove();
+        //wish_list = [];
+
+        $("tr.wishlist-item").each(function(index, el) {
+          wish_list.push(el.outerHTML);
+        });
+        //localStorage.setItem(wishlistkey, JSON.stringify(wish_list));
+
+        show_message("Removed");
+        count_items_in_wishlist_update();
+
+      });
+    });
+
+    //Validation against the amount of product being added
+    function count_items_in_wishlist_update() {
+      $("#listitem").html(wish_list.length);
+      if (wish_list.length > 1) {
+        $("#p_label").html("Wishlist (");
+      } else {
+        $("#p_label").html("Wishlist (");
+      }
+    }
+
+    function star(icon){
+        $(icon).toggleClass('fas far');
+    }
+</script>
 
 </head>
 <body>
@@ -85,6 +249,20 @@
         &#8592;&nbsp;CityByte
     </a>
 </nav>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<div id='msg'></div>
+<div id='wish_list' class='col-s'>
+  <p class="wish_list_heading">
+    <i class="fa fa-heart-o"></i>
+    <span id='p_label'>Wishlist (</span>
+    <span id='listitem'>0</span>
+    <span id='p_label'>)</span>
+  </p>
+  <table id='wish_list_item' border='0'></table>
+</div>
+
 
 <div class="container-fluid" style="padding: 0;">
     <div class="p-5 text-center bg-image" style="background-image: url('{{ photo_link }}'); background-size: cover; background-position: center; height: 50vh;">
@@ -212,7 +390,11 @@
                 </div>
                 <div class="card-footer">
                     {{ place.categories.0.name }}
-                    <i class="far fa-star" onClick="star(this)"></i>
+                    <div class="btn-group">
+                     <button class='wishlist' title="Add To Wishlist" name={{place.name}} cat = {{place.categories.0.name}} office_id='location'>
+                         <span><i class="far fa-star" onClick="star(this)"></i></span>
+                     </button>
+                    </div>
                 </div>
             </div>
         {% endfor %}

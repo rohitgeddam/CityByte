@@ -22,12 +22,12 @@ def info_page(request):
 
     weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
 
-    weather_info["sunrise"] = datetime.strptime(weather_info["sunrise"], "%H:%M").astimezone(
+    '''weather_info["sunrise"] = datetime.strptime(weather_info["sunrise"], "%H:%M").astimezone(
         pytz.timezone(weather_info['timezone'])).strftime("%I:%M")
     weather_info["sunset"] = datetime.strptime(weather_info["sunset"], "%H:%M").astimezone(
         pytz.timezone(weather_info['timezone'])).strftime("%I:%M")
     weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
-
+    '''
     dining_info = FourSquarePlacesHelper().get_places(
         city=f"{city}, {country}", categories="13065", sort="RELEVANCE", limit=5)
     airport_info = FourSquarePlacesHelper().get_places(

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Bootstrap AutoComplete Demo Bootstrap 4</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            line-height: 1.5;
+        }
+
+        .wrapper {
+            display: flex;
+            height: 100vh;
+        }
+
+        .main {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .side-panel-toggle {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+
+            color: #ffffff;
+            background: #009578;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .side-panel-toggle:hover {
+            background: #007960;
+        }
+
+        .sp-icon-close {
+            display: none !important;
+        }
+
+        .side-panel {
+            display: none;
+            width: 200px;
+            flex-shrink: 0;
+            padding: 20px;
+            color: #ffffff;
+            background: #009578;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+        }
+
+        .side-panel-open .side-panel {
+            display: initial;
+        }
+
+        .side-panel-open .sp-icon-open {
+            display: none !important;
+        }
+
+        .side-panel-open .sp-icon-close {
+            display: initial !important;
+        }
+
+    </style>
+
+</head>
+<body>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+
+<div class="wrapper side-panel-open">
+  <div class="main">
+  </div>
+  <button class="side-panel-toggle" type="button">
+    <span class="material-icons sp-icon-open">keyboard_double_arrow_left</span>
+    <span class="material-icons sp-icon-close">keyboard_double_arrow_right</span>
+  </button>
+  <div class="side-panel">
+  </div>
+</div>
+
+<script>
+    document.querySelector(".side-panel-toggle").addEventListener("click", () => {
+        document.querySelector(".wrapper").classList.toggle("side-panel-open");
+    });
+</script>
+</body>
+</html>
+</html>

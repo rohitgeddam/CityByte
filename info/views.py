@@ -20,9 +20,9 @@ def info_page(request):
     city = request.GET.get("city")
     country = request.GET.get("country")
 
-    weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
+    '''weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
 
-    '''weather_info["sunrise"] = datetime.strptime(weather_info["sunrise"], "%H:%M").astimezone(
+    weather_info["sunrise"] = datetime.strptime(weather_info["sunrise"], "%H:%M").astimezone(
         pytz.timezone(weather_info['timezone'])).strftime("%I:%M")
     weather_info["sunset"] = datetime.strptime(weather_info["sunset"], "%H:%M").astimezone(
         pytz.timezone(weather_info['timezone'])).strftime("%I:%M")
@@ -42,7 +42,7 @@ def info_page(request):
     return render(
         request, 'search/city_info.html',
         context={
-            "weather_info": weather_info,
+            # "weather_info": weather_info,
             "dining_info": dining_info,
             "airport_info": airport_info,
             "outdoor_info": outdoor_info,

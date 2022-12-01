@@ -106,7 +106,7 @@
           text-align: center;
           color: #fff;
           height: 27px;
-          background-color: #22a7c5;
+          background-color: #596869;
           padding: 6px 3px;
           font-weight: bold;
           cursor: pointer;
@@ -204,7 +204,7 @@
       $("#wish_list_item").on("click", ".w-premove", function() {
         $c_id = $(this).attr("wpid");
         $("#list_id_" + $c_id).remove();
-        //wish_list = [];
+        wish_list = [];
 
         $("tr.wishlist-item").each(function(index, el) {
           wish_list.push(el.outerHTML);
@@ -217,15 +217,7 @@
       });
     });
 
-    //Validation against the amount of product being added
-    function count_items_in_wishlist_update() {
-      $("#listitem").html(wish_list.length);
-      if (wish_list.length > 1) {
-        $("#p_label").html("Wishlist (");
-      } else {
-        $("#p_label").html("Wishlist (");
-      }
-    }
+
 
 </script>
 
@@ -369,18 +361,19 @@
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Rated Dining Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in dining_info.results %}
+        <div class='wishlist' title="Add To Wishlist" name={{place.name}} cat = {{place.categories.0.name}} office_id='location'>
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ place.name }}</h5>
                     <p class="card-text">{{ place.location.formatted_address }}</p>
                 </div>
-                <div class='wishlist' title="Add To Wishlist" name={{place.name}} cat = {{place.categories.0.name}} office_id='location'>
+
                 <div class="card-footer">
                     {{ place.categories.0.name }}
                 </div>
-                </div>
             </div>
+        </div>
         {% endfor %}
     </div>
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Landmark Spots</h2>

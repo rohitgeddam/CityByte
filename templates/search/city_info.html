@@ -180,7 +180,7 @@
           if(!wish_list.includes($office_str)){
                 $("#wish_list_item").append($office_str);
                 wish_list.push($office_str);
-                //  localStorage.setItem(wishlistkey, JSON.stringify(wish_list))
+                localStorage.setItem(wishlistkey, JSON.stringify(wish_list))
                show_message($name + " Added");
           }
         }
@@ -205,12 +205,6 @@
         $c_id = $(this).attr("wpid");
         $("#list_id_" + $c_id).remove();
         wish_list = [];
-
-        $("tr.wishlist-item").each(function(index, el) {
-          wish_list.push(el.outerHTML);
-        });
-        //localStorage.setItem(wishlistkey, JSON.stringify(wish_list));
-
         show_message("Removed");
         count_items_in_wishlist_update();
 
@@ -361,7 +355,7 @@
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Rated Dining Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in dining_info.results %}
-        <div class='wishlist' title="Add To Wishlist" name={{place.name}} cat = {{place.categories.0.name}} office_id='location'>
+        <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.name}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">

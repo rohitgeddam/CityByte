@@ -207,11 +207,8 @@
         wish_list = [];
         show_message("Removed");
         count_items_in_wishlist_update();
-
       });
     });
-
-
 
 </script>
 
@@ -355,7 +352,7 @@
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Rated Dining Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in dining_info.results %}
-        <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.name}}">
+        <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">

@@ -33,7 +33,7 @@ def info_page(request):
     except:
         weather_info = {}
     geolocator = Nominatim(user_agent="geoapiExercises")
-    # weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
+    weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
     # weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
     place = city
     location = geolocator.geocode(place)

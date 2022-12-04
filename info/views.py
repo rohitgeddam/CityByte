@@ -25,22 +25,20 @@ def info_page(request):
     try:
 
         weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
-
-        weather_info["sunrise"] = datetime.strptime(weather_info["sunrise"], "%H:%M").strftime("%I:%M")
-        weather_info["sunset"] = datetime.strptime(weather_info["sunset"], "%H:%M").strftime("%I:%M")
         weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
-
     except:
         weather_info = {}
+
     geolocator = Nominatim(user_agent="geoapiExercises")
-    weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
-    # weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
     place = city
     location = geolocator.geocode(place)
     latitude = location.latitude
     longitude = location.longitude
     sun = Sun(latitude, longitude)
-    time_zone = datetime.date(2022, 2,12)
+    # time_zone = datetime.date(2022, 2,28)
+    time_zone = datetime.date.today()
+    # time_zone = today.strftime("%Y-%d-%m")
+    print("fef",time_zone)
     try:
         sun_rise = sun.get_local_sunrise_time(time_zone)
         sun_dusk = sun.get_local_sunset_time(time_zone)

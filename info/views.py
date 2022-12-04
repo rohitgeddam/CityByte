@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 import pytz
 from django.shortcuts import render, redirect
@@ -7,6 +7,8 @@ from django.views.decorators.http import require_http_methods
 from info.helpers.places import FourSquarePlacesHelper
 from info.helpers.weather import WeatherBitHelper
 from search.helpers.photo import UnplashCityPhotoHelper
+from suntime import Sun
+from geopy.geocoders import Nominatim
 
 
 @require_http_methods(["GET"])
@@ -24,14 +26,28 @@ def info_page(request):
 
         weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
 
-        weather_info["sunrise"] = datetime.strptime(weather_info["sunrise"], "%H:%M").astimezone(
-            pytz.timezone(weather_info['timezone'])).strftime("%I:%M")
-        weather_info["sunset"] = datetime.strptime(weather_info["sunset"], "%H:%M").astimezone(
-            pytz.timezone(weather_info['timezone'])).strftime("%I:%M")
+        weather_info["sunrise"] = datetime.strptime(weather_info["sunrise"], "%H:%M").strftime("%I:%M")
+        weather_info["sunset"] = datetime.strptime(weather_info["sunset"], "%H:%M").strftime("%I:%M")
         weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
 
     except:
         weather_info = {}
+    geolocator = Nominatim(user_agent="geoapiExercises")
+    # weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
+    # weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
+    place = city
+    location = geolocator.geocode(place)
+    latitude = location.latitude
+    longitude = location.longitude
+    sun = Sun(latitude, longitude)
+    time_zone = datetime.date(2022, 2,12)
+    try:
+        sun_rise = sun.get_local_sunrise_time(time_zone)
+        sun_dusk = sun.get_local_sunset_time(time_zone)
+        weather_info["sunrise"]=sun_rise.strftime('%I:%M')
+        weather_info["sunset"]=sun_dusk.strftime('%I:%M')
+    except:
+        print("No Sunrise and Sunset")
     
     dining_info = FourSquarePlacesHelper().get_places(
         city=f"{city}, {country}", categories="13065", sort="RELEVANCE", limit=5)
@@ -44,7 +60,7 @@ def info_page(request):
 
     photo_link = UnplashCityPhotoHelper().get_city_photo(city=city)
 
-    print(dining_info)
+    # print(dining_info)
     return render(
         request, 'search/city_info.html',
         context={

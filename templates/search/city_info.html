@@ -168,6 +168,7 @@
       $('#wish_list_item').html(wish_list);
     }
 
+    // adds spot to wishlist when clicking card
     $(document).ready(function() {
       $(".wishlist").on("click", function() {
         $data = "";
@@ -187,7 +188,7 @@
         count_items_in_wishlist_update();
       });
 
-      //adding toggle functionality to the wishlist pannel
+      //adding toggle functionality to the wishlist panel
       $(".wish_list_heading").on("click", function() {
         if (!$(this).hasClass("up")) {
           $("#wish_list").css("height", "390px");
@@ -200,7 +201,7 @@
         }
 
       });
-    // Remove function
+    // Remove spot from wishlist by clicking 'x'
       $("#wish_list_item").on("click", ".w-premove", function() {
         $c_id = $(this).attr("wpid");
         $("#list_id_" + $c_id).remove();
@@ -359,7 +360,6 @@
                     <h5 class="card-title">{{ place.name }}</h5>
                     <p class="card-text">{{ place.location.formatted_address }}</p>
                 </div>
-
                 <div class="card-footer">
                     {{ place.categories.0.name }}
                 </div>
@@ -370,6 +370,7 @@
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Landmark Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in outdoor_info.results %}
+         <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
@@ -381,11 +382,13 @@
                     <i class="far fa-star" onClick="star(this)"></i>
                 </div>
             </div>
+         </div>
         {% endfor %}
     </div>
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Arts Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in arts_info.results %}
+         <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
@@ -397,12 +400,14 @@
                     <i class="far fa-star" onClick="star(this)"></i>
                 </div>
             </div>
+         </div>
         {% endfor %}
     </div>
     {% if airport_info.results %}
         <h2 style="margin: 4rem 0 1rem 1rem;">Airports</h2>
         <div class="d-flex flex-wrap" style="margin: 1rem;">
             {% for place in airport_info.results %}
+             <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
                 <div class="card" style="width: 18rem;">
                     <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                     <div class="card-body">
@@ -411,6 +416,7 @@
                     <i class="far fa-star" onClick="star(this)"></i>
                     </div>
                 </div>
+             </div>
             {% endfor %}
         </div>
     {% endif %}

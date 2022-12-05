@@ -1,5 +1,6 @@
 # CityByte Project 2
 ![](https://img.shields.io/github/issues-raw/rohitgeddam/CityByte) ![](https://img.shields.io/github/issues-closed-raw/rohitgeddam/CityByte)
+[![codecov](https://codecov.io/gh/therealppk/CityByte/branch/main/graph/badge.svg?token=HRK9X7OI2J)](https://codecov.io/gh/therealppk/CityByte)
 
 ## Introduction
 New and improved! Add more description here...
@@ -9,7 +10,7 @@ Below are the new features and improvements we made:
 2. Implement Caching to get API results faster
 3. Created a signup/login page - having an account goes a long way when we add new features that are customized for the user!
 4. Comment Page - you can comment on the place and look at all the other comments that have been posted!
-5. Fixed WeatherApi Bug
+5. Fixed WeatherApi Bug.
 
 ## Old Project
 Below is a video of the old project:
@@ -68,17 +69,8 @@ The below screenshots give the glance of the working of our project:
 ## Deployment:
 This project is deployed on AWS and is live at http://3.88.233.194:8000/
 
-## Code Coverage
-[![codecov](https://codecov.io/gh/therealppk/CityByte/branch/main/graph/badge.svg?token=HRK9X7OI2J)](https://codecov.io/gh/therealppk/CityByte)
 
-![](https://github.com/therealppk/CityByte/blob/main/docs/assets/code_coverage.png)
-
-## Future Scope
-* Caching results from API using Redis in order to improve the performance.
-* Addition of search bar with category filter, that will help the user to search based on his/ her requirements.
-* To run multiple API requests simultaneously, multithreading will be used.
-
-## Team Members
+## Old Project Team Members
 
 * Nirav Shah - nshah28
 * Vishwa Gandhi - vgandhi

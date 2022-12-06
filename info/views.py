@@ -79,10 +79,6 @@ def info_page(request):
 
     commentForm = CommentForm()
 
-    # if (
-    #     CitySearchRecord.objects.filter(city_name=city, country_name=country).count()
-    #     == 0
-    # ):
     CitySearchRecord.objects.create(city_name=city, country_name=country)
 
     # try cache first

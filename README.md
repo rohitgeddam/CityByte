@@ -31,7 +31,9 @@ Below is a video of the old project:
 
 ## New Project
 Below is a video of the significant improvements we made:
-Add video here
+
+
+https://drive.google.com/file/d/1sUewnnTpuXX3s8nMnpnR0WZhVM-c8L1a/view?usp=sharing
 
 ## Old Architecture
 ![1](https://user-images.githubusercontent.com/53405794/205814769-89810a17-8ab8-4065-baf4-dfea256b9263.png)

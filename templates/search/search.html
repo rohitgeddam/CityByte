@@ -6,7 +6,6 @@
 {% block content %}
  
 <style>
- 
     .container {
         margin: auto;
     }
@@ -81,8 +80,6 @@
         background: rgba(0,0,0,0.5);
  
     }
- 
- 
 </style>
  
  
@@ -137,7 +134,6 @@
  
     function getCityPhoto(city, callback1) {
         let xhr1 = new XMLHttpRequest();
- 
         let url1 = new URL('{{ request.scheme }}://{{ request.get_host }}{% url 'search:city_photo' %}');
         url1.searchParams.set('q', city);
  
@@ -194,8 +190,6 @@
  
         xhr.open('GET', url, true);
         xhr.send();
- 
- 
  
     }
  

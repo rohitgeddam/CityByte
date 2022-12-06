@@ -1,4 +1,9 @@
-<!doctype html>
+{% extends '../base.html' %}
+{% load crispy_forms_tags %}
+ 
+{% block title %}City{% endblock %}
+ 
+{% block content %}<!doctype html>
 <html lang="en">
 <head>
     <title>CityByte</title>
@@ -21,6 +26,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="js/respond.js"></script>
+ 
 
     <style>
         body {
@@ -30,43 +36,44 @@
             background-color: #36453b;
             color: #f5f9e9;
         }
-
+ 
         .card {
             background-color: #596869;
             color: #f5f9e9;
             border: none;
             margin: 1rem;
         }
-
+ 
         .card:hover {
             background-color: #f5f9e9;
             color: #515751;
         }
-
+ 
         #weather > .card-text {
             font-size: medium;
             font-weight: bolder;
         }
-
+ 
         #weather > .card-subtitle {
             font-size: x-small;
         }
-
+ 
         .card-text {
             font-size: 1rem;
             font-weight: bolder;
         }
-
+ 
         .card-title {
             font-size: 0.75rem;
         }
-
+ 
         .list-group, .list-group-item {
             color: inherit;
             background-color: transparent;
             margin: 0;
             border: none;
         }
+
 
         button a {
           color: #fff !important;
@@ -235,6 +242,27 @@
 </div>
 
 
+ 
+        .checked {
+            color: orange;
+        }
+ 
+        .fav{
+            font-size: 3rem;
+            position: absolute;
+            top: 15%;
+            right: 0;
+            margin: 16px;
+            cursor: pointer;
+        }
+ 
+        .fav:hover{
+            transform: scale(1.2);
+        }
+    </style>
+ 
+ 
+
 <div class="container-fluid" style="padding: 0;">
     <div class="p-5 text-center bg-image" style="background-image: url('{{ photo_link }}'); background-size: cover; background-position: center; height: 50vh;">
         <div class="mask">
@@ -248,8 +276,10 @@
             </div>
         </div>
     </div>
-
-
+ 
+    <div style="width: 100%;">
+       <span class="fa fa-regular fa-heart fav" id="fav-toggle" onClick="favToggle(event)"></span>
+    </div>
     {% if weather_info %}
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         <div class="card text-center">
@@ -355,10 +385,10 @@
             </div>
         </div>
     </div>
-
+ 
     {% endif %}
-   
-
+ 
+ 
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Rated Dining Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in dining_info.results %}
@@ -426,6 +456,60 @@
             {% endfor %}
         </div>
     {% endif %}
+
+ 
+    <div class="container" id="comments" style="padding: 4px;">
+        <h1>Comments</h1>
+        <hr>
+ 
+        <!-- add comment box -->
+        <form method="post" action="{% url 'info_page' %}?city={{ city }}&country={{country}}">
+            <!-- <textarea style="width: 100%; max-width: 100%;" id="comment" placeholder="Type your comment here"></textarea> -->
+            {% csrf_token %}
+            {{commentForm|crispy}}
+            <button class="btn btn-large btn-primary">Comment</button>
+        </form>
+ 
+    {% if comments%}
+ 
+        <hr>
+        <div>
+        {% for comment in comments %}
+        <div>
+            <p><b>{{comment.author.username|title}}</b></p>
+            <p>{{comment.comment}}</p>
+            <p>{{comment.created_on}}</p>
+            <hr>
+        </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+ 
+    </div>
+ 
 </div>
-</body>
-</html>
+ 
+ 
+<script>
+    // if in fav list remove checked else keep it
+ 
+    var favBtn = document.getElementById("fav-toggle");
+    {% if isInFav %}
+        favBtn.classList.toggle("checked");
+        console.log("CHECKED")
+    {% endif %}
+    function favToggle(event){
+        const url = "{% url 'addToFav' %}?city={{city}}&country={{country}}"
+        fetch(url).then(function(response) {
+            return response.json();
+            }).then(function(data) {
+            console.log(data);
+            }).catch(function() {
+            console.log("Booo");
+            });
+        favBtn.classList.toggle("checked");
+ 
+    }
+</script>
+ 
+{% endblock %}

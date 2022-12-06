@@ -1,5 +1,4 @@
 from django.urls import path
-
 from info.views import place_photo
 
 urlpatterns = [

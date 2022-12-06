@@ -174,7 +174,7 @@ def info_page(request):
         request,
         "search/city_info.html",
         context={
-            "weather_info": weather_info,
+            # "weather_info": weather_info,
             "dining_info": dining_info,
             "airport_info": airport_info,
             "outdoor_info": outdoor_info,

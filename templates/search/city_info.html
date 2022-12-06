@@ -3,13 +3,31 @@
  
 {% block title %}City{% endblock %}
  
+{% block content %}<!doctype html>
+<html lang="en">
+<head>
+    <title>CityByte</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/reset.css" rel="stylesheet" />
+    <link href="css/custom.css" rel="stylesheet" />
+    <link href="images/favicon" type="image/png" rel="icon">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="js/respond.js"></script>
  
-{% block content %}
- 
- 
- 
- 
- 
+
     <style>
         body {
             padding: 0;
@@ -55,6 +73,175 @@
             margin: 0;
             border: none;
         }
+
+
+        button a {
+          color: #fff !important;
+        }
+
+        button {
+          font-family: 'open sans', sans-serif;
+          font-size: 15px;
+        }
+
+        button {
+          text-align: center;
+          padding: 1px 7px;
+          margin: 0 5px 0;
+          border: 4px solid #000;
+          background-color: #000;
+          vertical-align: middle;
+          cursor: pointer;
+          white-space: nowrap;
+          font-size: 35px;
+          color: #fff;
+        }
+
+        #wish_list {
+          position: fixed;
+          bottom: 0px;
+          right: 0px;
+          height: 35px;
+          width: 400px;
+          background: #fff;
+          border: 3px solid #22a7c5;
+          z-index: 3;
+        }
+
+        #wish_list .wish_list_heading {
+          margin: 0px 0px;
+          text-align: center;
+          color: #fff;
+          height: 27px;
+          background-color: #596869;
+          padding: 6px 3px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 18px;
+        }
+
+        #wish_list_item {
+          width: 100%;
+          text-align: center;
+          border-spacing: 0px 4px;
+          border-collapse: separate;
+        }
+
+        #msg {
+          position: fixed;
+          display: none;
+          padding: 10px 25px;
+          background: #22a7c5;
+          border: 1px solid #22a7c5;
+          font-size: 18px;
+          width: 50%;
+          text-align: center;
+          font-weight: 700;
+          color: #fff;
+          z-index: 4;
+        }
+
+        .wishlist-item {
+          padding: 10px 5px;
+          background: #f1f1f1;
+          color: #323470;
+        }
+
+        .w-premove {
+          font-size: 20px;
+          cursor: pointer;
+          width: 7%;
+          padding-bottom: 4px;
+        }
+
+        .w-pname {
+          font-size: 16px;
+          width: 93%;
+          text-align: left;
+          padding-left: 12px;
+        }
+    </style>
+
+<script type = "text/javascript">
+    var wishlistkey = "wishlist";
+    // try and fetch an existing wishlist from the localStorage.
+    var wish_list = []; // localStorage.getItem(wishlistkey)
+
+    if ($.isEmptyObject(wish_list)) { //nothing was saved previously
+      wish_list = new Array()
+    } else {
+      wish_list = JSON.parse(wish_list);
+      count_items_in_wishlist_update();
+      $('#wish_list_item').html(wish_list);
+    }
+
+    // adds spot to wishlist when clicking card
+    $(document).ready(function() {
+      $(".wishlist").on("click", function() {
+        $data = "";
+        $c_id = $(this).attr("c_id");
+        $name = $(this).attr("name");
+        $cat = $(this).attr("cat");
+        $office_str = "<tr class='wishlist-item' id='list_id_" + $c_id + "'><td class='w-pname'>" + $name +", " + $cat + "</td><td class='w-premove' wpid='" + $c_id + "'>x</td></tr>";
+        //check if the element is in the array
+        if ($.inArray($c_id, wish_list) == -1) {
+          if(!wish_list.includes($office_str)){
+                $("#wish_list_item").append($office_str);
+                wish_list.push($office_str);
+                localStorage.setItem(wishlistkey, JSON.stringify(wish_list))
+               show_message($name + " Added");
+          }
+        }
+        count_items_in_wishlist_update();
+      });
+
+      //adding toggle functionality to the wishlist panel
+      $(".wish_list_heading").on("click", function() {
+        if (!$(this).hasClass("up")) {
+          $("#wish_list").css("height", "390px");
+          $(this).addClass("up");
+          $("#wish_list").css("overflow", "auto");
+        } else {
+          $("#wish_list").css("height", "35px");
+          $(this).removeClass("up");
+          $("#wish_list").css("overflow", "hidden");
+        }
+
+      });
+    // Remove spot from wishlist by clicking 'x'
+      $("#wish_list_item").on("click", ".w-premove", function() {
+        $c_id = $(this).attr("wpid");
+        $("#list_id_" + $c_id).remove();
+        wish_list = [];
+        show_message("Removed");
+        count_items_in_wishlist_update();
+      });
+    });
+
+</script>
+
+</head>
+<body>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'main_page' %}" style="font-size: 3rem; font-weight: bolder; padding: 1rem 3rem;">
+        &#8592;&nbsp;CityByte
+    </a>
+</nav>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<div id='msg'></div>
+<div id='wish_list' class='col-s'>
+  <p class="wish_list_heading">
+    <span id='p_label'>Wishlist</span>
+  </p>
+  <table id='wish_list_item' border='0'></table>
+</div>
+
+
  
         .checked {
             color: orange;
@@ -75,10 +262,7 @@
     </style>
  
  
- 
- 
- 
- 
+
 <div class="container-fluid" style="padding: 0;">
     <div class="p-5 text-center bg-image" style="background-image: url('{{ photo_link }}'); background-size: cover; background-position: center; height: 50vh;">
         <div class="mask">
@@ -208,6 +392,7 @@
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Rated Dining Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in dining_info.results %}
+        <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
@@ -218,11 +403,13 @@
                     {{ place.categories.0.name }}
                 </div>
             </div>
+        </div>
         {% endfor %}
     </div>
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Landmark Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in outdoor_info.results %}
+         <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
@@ -233,11 +420,13 @@
                     {{ place.categories.0.name }}
                 </div>
             </div>
+         </div>
         {% endfor %}
     </div>
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Arts Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in arts_info.results %}
+         <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
@@ -248,24 +437,26 @@
                     {{ place.categories.0.name }}
                 </div>
             </div>
+         </div>
         {% endfor %}
     </div>
     {% if airport_info.results %}
- 
-            <h2 style="margin: 4rem 0 1rem 1rem;">Airports</h2>
-            <div class="d-flex flex-wrap" style="margin: 1rem;">
-                {% for place in airport_info.results %}
-                    <div class="card" style="width: 18rem;">
-                        <img class="airport-info-img" src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
-                        <div class="card-body">
-                            <h5 class="card-title" style="font-size: 0.75rem">{{ place.name }}</h5>
-                            <p class="card-text" style="font-size: 1rem;">{{ place.location.formatted_address }}</p>
-                        </div>
+        <h2 style="margin: 4rem 0 1rem 1rem;">Airports</h2>
+        <div class="d-flex flex-wrap" style="margin: 1rem;">
+            {% for place in airport_info.results %}
+             <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
+                <div class="card" style="width: 18rem;">
+                    <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size: 0.75rem">{{ place.name }}</h5>
+                        <p class="card-text" style="font-size: 1rem;">{{ place.location.formatted_address }}</p>
                     </div>
-                {% endfor %}
-            </div>
- 
+                </div>
+             </div>
+            {% endfor %}
+        </div>
     {% endif %}
+
  
     <div class="container" id="comments" style="padding: 4px;">
         <h1>Comments</h1>

@@ -104,14 +104,14 @@ Results:
 #### 5. Create .env file at ./CityByte using the below template.
    
 ```
-    GEODB_X_RAPID_API_KEY=0ebeca3f10msha647955d4a03bd3p16b08bjsn3570b7991a4c
-    GEODB_X_RAPID_API_HOST=wft-geo-db.p.rapidapi.com
-    AMADEUS_API_KEY=eNJXGmjjlYYikHyfAGXRZDGG0q5NaN2q
-    AMADEUS_API_SECRET_KEY=YGgltYGVEjdk1tZ0
-    UNSPLASH_API_KEY=OWiI5nfmGz_dY1-T0m_vCOGqwGzpUo-QeuO2nil8MaY
-    FOURSQUARE_API_KEY="fsq3owEliIvoxcep8TxUmUh35FtlvyZxtIIuOJAXl+A9UlY="
-    WEATHER_BIT_X_RAPID_API_KEY=0ebeca3f10msha647955d4a03bd3p16b08bjsn3570b7991a4c
-    WEATHER_BIT_X_RAPID_API_HOST=weatherbit-v1-mashape.p.rapidapi.com
+    GEODB_X_RAPID_API_KEY=""
+    GEODB_X_RAPID_API_HOST=""
+    AMADEUS_API_KEY=""
+    AMADEUS_API_SECRET_KEY=""
+    UNSPLASH_API_KEY=""
+    FOURSQUARE_API_KEY=""
+    WEATHER_BIT_X_RAPID_API_KEY=""
+    WEATHER_BIT_X_RAPID_API_HOST=""
 ```
 Create an account in the below websites to Fetch API keys and use them in the above template.  
 * [GeoDB Cities API](https://rapidapi.com/wirefreethought/api/geodb-cities/details)

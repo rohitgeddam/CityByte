@@ -33,6 +33,34 @@ Below is a video of the old project:
 Below is a video of the significant improvements we made:
 Add video here
 
+## Old Architecture
+![1](https://user-images.githubusercontent.com/53405794/205814769-89810a17-8ab8-4065-baf4-dfea256b9263.png)
+
+## New Architecture
+![2](https://user-images.githubusercontent.com/53405794/205814790-7c3f2cdc-59dc-47b6-92df-bddd8c5208df.png)
+
+## Improvements
+Improvements can be seen in the follwing load testing reportsusing the LocustIO:
+
+### Before Caching Implementation:
+100 concurrent users:
+![Before_cache_100](https://user-images.githubusercontent.com/53405794/205815400-ea00d406-acef-48d5-a0b8-dd2e71da6a73.png)  
+1000 concurrent users:
+![Before_cache_1000](https://user-images.githubusercontent.com/53405794/205815413-6821c1e6-dc03-41da-8ed8-70267a6becbd.png)
+10000 concurrent users:
+![before_cache_10000](https://user-images.githubusercontent.com/53405794/205815417-a3adc3c8-2e8b-4c41-b854-fc78b781b4eb.png)
+
+### After Caching Implementation:  
+100 concurrent users:
+![After_cache_100](https://user-images.githubusercontent.com/53405794/205815892-82ff37e1-0b33-45e9-bc62-967293a77848.png)
+
+1000 concurrent users:
+![Afte_cache_1000](https://user-images.githubusercontent.com/53405794/205815903-aa5d0252-af46-4ae1-be78-162be476c09c.png)
+
+10000 concurrent users:
+![after_cache_10000](https://user-images.githubusercontent.com/53405794/205815928-0610629a-3c4f-4763-b2c7-3f67fad26530.png)
+
+
 ## Quick Start
 
 #### 1. Clone the repository:  

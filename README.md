@@ -64,7 +64,7 @@ Improvements can be seen in the follwing load testing reportsusing the LocustIO:
 
 Results:  
 * For 10000 concurrent users, before caching there was failure when the test was performed, but for the caching scenario, the mean response time was 46000 ms. 
-* For 1000 concurrent users, before caching there was mean response time of 13000 ms when the test was performed, but for the caching scenario, the mean response time was 10000 ms.
+* For 1000 concurrent users, before caching there was mean response time of 48000 ms when the test was performed, but for the caching scenario, the mean response time was 10000 ms.
 
 ## Quick Start
 

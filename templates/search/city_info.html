@@ -72,13 +72,139 @@
         .fav:hover{
             transform: scale(1.2);
         }
+
+        #wish_list {
+          position: fixed;
+          bottom: 0px;
+          right: 0px;
+          height: 35px;
+          width: 400px;
+          background: #fff;
+          border: 3px solid #22a7c5;
+          z-index: 3;
+        }
+
+        #wish_list .wish_list_heading {
+          margin: 0px 0px;
+          text-align: center;
+          color: #fff;
+          height: 27px;
+          background-color: #596869;
+          padding: 6px 3px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 18px;
+        }
+
+        #wish_list_item {
+          width: 100%;
+          text-align: center;
+          border-spacing: 0px 4px;
+          border-collapse: separate;
+        }
+
+        #msg {
+          position: fixed;
+          display: none;
+          padding: 10px 25px;
+          background: #22a7c5;
+          border: 1px solid #22a7c5;
+          font-size: 18px;
+          width: 50%;
+          text-align: center;
+          font-weight: 700;
+          color: #fff;
+          z-index: 4;
+        }
+
+        .wishlist-item {
+          padding: 10px 5px;
+          background: #f1f1f1;
+          color: #323470;
+        }
+
+        .w-premove {
+          font-size: 20px;
+          cursor: pointer;
+          width: 7%;
+          padding-bottom: 4px;
+        }
+
+        .w-pname {
+          font-size: 16px;
+          width: 93%;
+          text-align: left;
+          padding-left: 12px;
+        }
     </style>
  
- 
- 
- 
- 
- 
+ <script type = "text/javascript">
+    var wishlistkey = "wishlist";
+    // try and fetch an existing wishlist from the localStorage.
+    var wish_list = []; // localStorage.getItem(wishlistkey)
+
+    if ($.isEmptyObject(wish_list)) { //nothing was saved previously
+      wish_list = new Array()
+    } else {
+      wish_list = JSON.parse(wish_list);
+      count_items_in_wishlist_update();
+      $('#wish_list_item').html(wish_list);
+    }
+
+    // adds spot to wishlist when clicking card
+    $(document).ready(function() {
+      $(".wishlist").on("click", function() {
+        $data = "";
+        $c_id = $(this).attr("c_id");
+        $name = $(this).attr("name");
+        $cat = $(this).attr("cat");
+        $office_str = "<tr class='wishlist-item' id='list_id_" + $c_id + "'><td class='w-pname'>" + $name +", " + $cat + "</td><td class='w-premove' wpid='" + $c_id + "'>x</td></tr>";
+        //check if the element is in the array
+        if ($.inArray($c_id, wish_list) == -1) {
+          if(!wish_list.includes($office_str)){
+                $("#wish_list_item").append($office_str);
+                wish_list.push($office_str);
+                localStorage.setItem(wishlistkey, JSON.stringify(wish_list))
+               show_message($name + " Added");
+          }
+        }
+        count_items_in_wishlist_update();
+      });
+
+      //adding toggle functionality to the wishlist panel
+      $(".wish_list_heading").on("click", function() {
+        if (!$(this).hasClass("up")) {
+          $("#wish_list").css("height", "390px");
+          $(this).addClass("up");
+          $("#wish_list").css("overflow", "auto");
+        } else {
+          $("#wish_list").css("height", "35px");
+          $(this).removeClass("up");
+          $("#wish_list").css("overflow", "hidden");
+        }
+
+      });
+    // Remove spot from wishlist by clicking 'x'
+      $("#wish_list_item").on("click", ".w-premove", function() {
+        $c_id = $(this).attr("wpid");
+        $("#list_id_" + $c_id).remove();
+        wish_list = [];
+        show_message("Removed");
+        count_items_in_wishlist_update();
+      });
+    });
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<div id='msg'></div>
+<div id='wish_list' class='col-s'>
+  <p class="wish_list_heading">
+    <span id='p_label'>Wishlist</span>
+  </p>
+  <table id='wish_list_item' border='0'></table>
+</div>
+
 <div class="container-fluid" style="padding: 0;">
     <div class="p-5 text-center bg-image" style="background-image: url('{{ photo_link }}'); background-size: cover; background-position: center; height: 50vh;">
         <div class="mask">
@@ -208,6 +334,7 @@
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Rated Dining Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in dining_info.results %}
+        <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
@@ -218,11 +345,13 @@
                     {{ place.categories.0.name }}
                 </div>
             </div>
+        </div>
         {% endfor %}
     </div>
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Landmark Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in outdoor_info.results %}
+        <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
@@ -233,11 +362,13 @@
                     {{ place.categories.0.name }}
                 </div>
             </div>
+        </div>
         {% endfor %}
     </div>
     <h2 style="margin: 4rem 0 1rem 1rem;">Top Arts Spots</h2>
     <div class="d-flex flex-wrap" style="margin: 1rem;">
         {% for place in arts_info.results %}
+        <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <div class="card-body">
@@ -248,6 +379,7 @@
                     {{ place.categories.0.name }}
                 </div>
             </div>
+        </div>
         {% endfor %}
     </div>
     {% if airport_info.results %}
@@ -255,6 +387,7 @@
             <h2 style="margin: 4rem 0 1rem 1rem;">Airports</h2>
             <div class="d-flex flex-wrap" style="margin: 1rem;">
                 {% for place in airport_info.results %}
+                <div class='wishlist' title="Add To Wishlist" name="{{place.name}}" cat="{{place.categories.0.name}}" c_id="{{place.fsq_id}}">
                     <div class="card" style="width: 18rem;">
                         <img class="airport-info-img" src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                         <div class="card-body">
@@ -262,6 +395,7 @@
                             <p class="card-text" style="font-size: 1rem;">{{ place.location.formatted_address }}</p>
                         </div>
                     </div>
+                </div>
                 {% endfor %}
             </div>
  

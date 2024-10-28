@@ -210,6 +210,8 @@
         {% for place in dining_info.results %}
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
+                <a href="{% url 'info:add_to_itinerary' city=city spot_name=place.name address=place.location.formatted_address category=place.categories.0.name %}" class="btn btn-primary">Add to Itinerary</a>
+                <a href="{% url 'info:remove_from_itinerary' city=city spot_name=place.name %}" class="btn btn-danger">Remove from Itinerary</a>
                 <div class="card-body">
                     <h5 class="card-title">{{ place.name }}</h5>
                     <p class="card-text">{{ place.location.formatted_address }}</p>
@@ -225,6 +227,8 @@
         {% for place in outdoor_info.results %}
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
+                <a href="{% url 'info:add_to_itinerary' city=city spot_name=place.name address=place.location.formatted_address category=place.categories.0.name %}" class="btn btn-primary">Add to Itinerary</a>
+                <a href="{% url 'info:remove_from_itinerary' city=city spot_name=place.name %}" class="btn btn-danger">Remove from Itinerary</a>
                 <div class="card-body">
                     <h5 class="card-title">{{ place.name }}</h5>
                     <p class="card-text">{{ place.location.formatted_address }}</p>
@@ -240,6 +244,8 @@
         {% for place in arts_info.results %}
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
+                <a href="{% url 'info:add_to_itinerary' city=city spot_name=place.name address=place.location.formatted_address category=place.categories.0.name %}" class="btn btn-primary">Add to Itinerary</a>
+                <a href="{% url 'info:remove_from_itinerary' city=city spot_name=place.name %}" class="btn btn-danger">Remove from Itinerary</a>
                 <div class="card-body">
                     <h5 class="card-title">{{ place.name }}</h5>
                     <p class="card-text">{{ place.location.formatted_address }}</p>
@@ -295,7 +301,9 @@
         {% endif %}
  
     </div>
- 
+    <a href="{% url 'info:itinerary_page' %}?city={{ city }}&country={{ country }}">Your Itinerary</a>
+
+
 </div>
  
  

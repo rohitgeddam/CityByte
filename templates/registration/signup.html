@@ -1,29 +1,155 @@
 {% extends '../base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}SignUp{% endblock %}
- 
- 
+{% block title %}Sign Up{% endblock %}
+
 {% block content %}
- 
+
+<!-- Style for the signup form -->
 <style>
- 
+    /* Custom styling */
+    body {
+        background-color: #f7f7f7;
+    }
+    .signup-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .signup-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        background-color: #343a40;
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+    }
+    .form-control {
+        height: 50px;
+        border-radius: 5px;
+    }
+    .login-link {
+        text-align: center;
+    }
+    .login-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+    .password-requirements {
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+    .password-requirements li {
+        list-style-type: none;
+    }
+    .password-requirements input[type="checkbox"] {
+        margin-right: 10px;
+    }
 </style>
-<!-- templates/registration/login.html -->
-<div class="container">
- 
- 
-   <div class="card m-4" style="width: 500px;">
-    <h5 class="card-header">Sign Up</h5>
-    <div class="card-body">
-        <form method="post">
-            {% csrf_token %}
-            {{ form |crispy }}
-            <button type="submit" class="btn btn-large btn-primary">Sign Up</button>
-            <hr>
-            Already have an account? <a class="" href="{% url 'login' %}">Login</a>
- 
-        </form>
+
+<!-- Sign-Up Form with Password Validation -->
+<div class="container signup-container">
+    <div class="card signup-card" style="max-width: 500px; width: 100%;">
+        <div class="card-header">Sign Up</div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <!-- Password Requirements -->
+                <ul class="password-requirements">
+                    <li><input type="checkbox" id="similarInfo" disabled> Your password can’t be too similar to your other personal information.</li>
+                    <li><input type="checkbox" id="minChars" disabled> Your password must contain at least 8 characters.</li>
+                    <li><input type="checkbox" id="commonPassword" disabled> Your password can’t be a commonly used password.</li>
+                    <li><input type="checkbox" id="notNumeric" disabled> Your password can’t be entirely numeric.</li>
+                    <li><input type="checkbox" id="passwordMatch" disabled> Both passwords must match.</li>
+                </ul>
+
+                <button type="submit" class="btn btn-large btn-primary">Sign Up</button>
+                <hr>
+                <div class="login-link">
+                    Already have an account? <a href="{% url 'login' %}">Login</a>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
+
+<!-- JavaScript for Password Validation -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordField = document.getElementById('id_password1');  // Assuming Django's default password field ID for password
+        const confirmPasswordField = document.getElementById('id_password2');  // Assuming Django's default password confirmation field ID
+        const usernameField = document.getElementById('id_username');   // Assuming there's a username field in the form
+        const similarInfoCheckbox = document.getElementById('similarInfo');
+        const minCharsCheckbox = document.getElementById('minChars');
+        const commonPasswordCheckbox = document.getElementById('commonPassword');
+        const notNumericCheckbox = document.getElementById('notNumeric');
+        const passwordMatchCheckbox = document.getElementById('passwordMatch');
+
+        // List of commonly used passwords (you can expand this list)
+        const commonPasswords = ['123456', 'password', '123456789', 'qwerty', 'abc123', 'password1'];
+
+        // Function to check if password is entirely numeric
+        function isNumeric(password) {
+            return /^\d+$/.test(password);
+        }
+
+        // Function to check if password is too similar to personal information
+        function isSimilarToPersonalInfo(password, username) {
+            return username && password.toLowerCase().includes(username.toLowerCase());
+        }
+
+        // Function to check if password is a commonly used password
+        function isCommonPassword(password) {
+            return commonPasswords.includes(password);
+        }
+
+        // Function to check if both passwords match
+        function doPasswordsMatch(password, confirmPassword) {
+            return password === confirmPassword;
+        }
+
+        // Validate password on input change
+        function validatePassword() {
+            const password = passwordField.value;
+            const confirmPassword = confirmPasswordField.value;
+            const username = usernameField ? usernameField.value : '';  // Get username if available
+
+            // Check minimum length (8 characters)
+            minCharsCheckbox.checked = password.length >= 8;
+
+            // Check if password is not numeric
+            notNumericCheckbox.checked = !isNumeric(password);
+
+            // Check if password is similar to personal information (username)
+            similarInfoCheckbox.checked = !isSimilarToPersonalInfo(password, username);
+
+            // Check if password is commonly used
+            commonPasswordCheckbox.checked = !isCommonPassword(password);
+
+            // Check if both passwords match
+            passwordMatchCheckbox.checked = doPasswordsMatch(password, confirmPassword);
+        }
+
+        // Listen for input changes on both password fields
+        passwordField.addEventListener('input', validatePassword);
+        confirmPasswordField.addEventListener('input', validatePassword);
+    });
+</script>
+
 {% endblock %}

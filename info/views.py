@@ -15,6 +15,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count
+from .models import ItineraryItem
 
 
 @login_required()
@@ -203,4 +204,62 @@ def profile_page(request):
         request,
         "profile/profile.html",
         {"favCities": favCities, "popularCities": popularCities},
+    )
+
+@login_required
+def add_to_itinerary(request, city, spot_name, address, category):
+    # Check if the spot is already in the itinerary
+    if not ItineraryItem.objects.filter(user=request.user, city=city, spot_name=spot_name).exists():
+        ItineraryItem.objects.create(
+            user=request.user,
+            city=city,
+            spot_name=spot_name,
+            address=address,
+            category=category
+        )
+        return JsonResponse({'status': 'success', 'message': 'Added to itinerary.'})
+    return JsonResponse({'status': 'error', 'message': 'Already in itinerary.'})
+
+@login_required
+def remove_from_itinerary(request, city, spot_name):
+    item = ItineraryItem.objects.filter(user=request.user, city=city, spot_name=spot_name).first()
+    
+    if item:
+        item.delete()
+        return JsonResponse({'status': 'success', 'message': 'Removed from itinerary.'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Item not found.'}, status=404)
+
+
+# def city_view(request, city):
+#     itinerary = ItineraryItem.objects.filter(user=request.user, city=city)
+#     return render(request, 'city_template.html', {'itinerary': itinerary,'weather_info': weather_info,})
+
+# @login_required
+# def city_view(request, city):
+#     # Fetch the user's itinerary items for the specific city
+#     itinerary_items = ItineraryItem.objects.filter(user=request.user, city=city)
+
+#     # Render the city_info.html template with the itinerary items
+#     return render(request, 'search/city_info.html', {
+#         'itinerary_items': itinerary_items,
+#         'city': city,
+#     })
+
+@require_http_methods(["GET"])
+def itinerary_page(request):
+    city = request.GET.get("city")
+    country = request.GET.get("country")
+
+    # Fetch itinerary items for the user and city
+    itinerary_items = ItineraryItem.objects.filter(user=request.user, city=city).order_by("added_on")
+
+    return render(
+        request,
+        "search/itinerary.html",
+        context={
+            "itinerary": itinerary_items,
+            "city": city,
+            "country": country,
+        },
     )

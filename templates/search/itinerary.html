@@ -1,0 +1,21 @@
+{% extends '../base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Itinerary for {{ city }}{% endblock %}
+
+{% block content %}
+<h2>Your Itinerary for {{ city }}</h2>
+<div class="d-flex flex-wrap">
+    {% for item in itinerary %}
+        <div class="card" style="width: 18rem; margin: 1rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.spot_name }}</h5>
+                <p class="card-text">{{ item.address }}</p>
+                <p class="card-text">{{ item.category }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p>You have no items in your itinerary.</p>
+    {% endfor %}
+</div>
+{% endblock %}

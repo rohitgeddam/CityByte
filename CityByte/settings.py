@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "search",
     "info",
+    "CityByte",
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "CityByte.urls"
+
+GOOGLE_OAUTH2_CLIENT_ID = env("GOOGLE_OAUTH2_ID")
+GOOGLE_OAUTH2_CLIENT_SECRET = env("GOOGLE_OAUTH2_SECRET")
+SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 CORS_ALLOW_ALL_ORIGINS = True
 

@@ -1,6 +1,6 @@
 from urllib import request
 from django.test import TestCase
-from info.helpers.places import FourSquarePlacesHelper
+from info.helpers.places import *
 from django.shortcuts import render
 from info.helpers.weather import WeatherBitHelper
 from datetime import datetime

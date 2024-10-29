@@ -23,13 +23,18 @@ Below are the new features and improvements we made:
 5. Fixed WeatherApi Bug :bug:
 6. Implemented social media page and support contact information. 
 
-## Old Project - In Brief
+## New Project
+* Google Account Sign-up and Logins - quick and easy sign-up using Google's authentication services
+* UI Improvements - your eyes will no longer hurt while looking at the site (the bar was low)
+* Trip Itinerary - Save the locations you want to go in each city so you don't forget!
+
+### Old Project - Phase 1
 Below is a video of the old project:
 
 [<img width="902" alt="image" src="https://user-images.githubusercontent.com/46688470/204404965-d3084c6c-b062-4eec-8b10-0ef95a577bd6.png">](https://drive.google.com/file/d/1FVJDir9ZufbAiUGe7AfzZvTfF7HWr58e/view?usp=sharing)
 
 
-## New Project
+### Old Project - Phase 2
 Below is a video of the significant improvements we made:
 
 
@@ -45,16 +50,14 @@ https://drive.google.com/file/d/1sUewnnTpuXX3s8nMnpnR0WZhVM-c8L1a/view?usp=shari
 Improvements can be seen in the follwing load testing reportsusing the LocustIO:
 
 ### Before Caching Implementation:
-100 concurrent users:
-![Before_cache_100](https://user-images.githubusercontent.com/53405794/205815400-ea00d406-acef-48d5-a0b8-dd2e71da6a73.png)  
+
 1000 concurrent users:
 ![Before_cache_1000](https://user-images.githubusercontent.com/53405794/205815413-6821c1e6-dc03-41da-8ed8-70267a6becbd.png)
+
 10000 concurrent users:
 ![before_cache_10000](https://user-images.githubusercontent.com/53405794/205815417-a3adc3c8-2e8b-4c41-b854-fc78b781b4eb.png)
 
 ### After Caching Implementation:  
-100 concurrent users:
-![After_cache_100](https://user-images.githubusercontent.com/53405794/205815892-82ff37e1-0b33-45e9-bc62-967293a77848.png)
 
 1000 concurrent users:
 ![Afte_cache_1000](https://user-images.githubusercontent.com/53405794/205815903-aa5d0252-af46-4ae1-be78-162be476c09c.png)
@@ -101,7 +104,7 @@ Results:
 `
 
 
-#### 5. Create .env file at ./CityByte using the below template.
+#### 5a. Create .env file at ./CityByte using the below template.
    
 ```
     GEODB_X_RAPID_API_KEY=""
@@ -119,6 +122,18 @@ Create an account in the below websites to Fetch API keys and use them in the ab
 * [Amadeus API](https://developers.amadeus.com/)
 * [Unsplash API](https://unsplash.com/developers)
 * [Foursquare API](https://location.foursquare.com/developer/)  
+
+#### 5b. Register your Google OAuth 2.0 Client IDs following the steps below.
+1. Log in to https://console.cloud.google.com
+2. Create a new Project
+3. Navigate to APIs & Services
+4. Select "Create Credential" > "OAuth client ID"
+5. For the application type, choose "Web application" and enter a name for it
+6. For authorized JavaScript origins, enter "http://localhost", "http://localhost:8000", and "http://127.0.0.1:8000"
+7. For authorized redirect URIs, enter "http://localhost:8000/auth-receiver"
+8. After this, you will be shown your Client ID and Client secret
+9. Add `GOOGLE_OAUTH2_ID=""` and `GOOGLE_OAUTH2_SECRET=""` to the .env file with the Client ID and Client secret within their respective quotes
+10. Add the Client ID to `data-client_id=""` in login.html
 
 #### 6. Set-up REDIS
 * Follow the instructions in [Getting Started](https://redis.io/docs/getting-started/) to Install Redis in your local environment.
@@ -265,8 +280,12 @@ This project is deployed on AWS and is live at http://3.88.233.194:8000/
 * Addition of search bar with category filter, that will help the user to search based on his/ her requirements.
 * To run multiple API requests simultaneously, multithreading will be used.
 
-## Team Members
+## Current Team Members
+* Brody Bond - bbond
+* Chaitanya Nagulapalli - cknagula
+* Tristan Hall - tdhall6
 
+## Prior Team Members
 * Nirav Shah - nshah28
 * Vishwa Gandhi - vgandhi
 * Pradyumna Khawas - ppkhawas

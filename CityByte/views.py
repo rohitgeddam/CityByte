@@ -2,8 +2,7 @@ import os
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login
-from django.db import IntegrityError
+from django.contrib.auth import login, logout
 
 from django.urls import reverse_lazy
 from django.views import generic
@@ -25,6 +24,7 @@ def sign_in(request):
 
 @csrf_exempt
 def auth_receiver(request):
+    print(request.POST)
     token = request.POST['credential']
 
     try:
@@ -52,10 +52,19 @@ def auth_receiver(request):
     #  Log the user in
     login(request, user)
     request.session['user_data'] = user_data
-
+    
     return redirect('main_page')
 
-
 def sign_out(request):
-    del request.session['user_data']
+    print(request.session)
+    try:
+        del request.session['user_data']
+    except Exception as e:
+        print(f"Error Logging Out - Exception: {e}")
+
+    try:
+        logout(request)
+    except Exception as e:
+        print(f"Error Logging Out 2 - Exception: {e}")
+
     return redirect('sign_in')

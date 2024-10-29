@@ -38,6 +38,8 @@ jobs:
         WEATHER_BIT_X_RAPID_API_KEY: ${{ secrets.WEATHER_BIT_X_RAPID_API_KEY }}
         WEATHER_BIT_X_RAPID_API_HOST: ${{ secrets.WEATHER_BIT_X_RAPID_API_HOST }}
         FOURSQUARE_API_KEY: ${{ secrets.FOURSQUARE_API_KEY }}
+        GOOGLE_OAUTH2_ID: ${{ secrets.GOOGLE_OAUTH2_ID }}
+        GOOGLE_OAUTH2_SECRET: ${{ secrets.GOOGLE_OAUTH2_SECRET}}
       run: |
         python manage.py test
         coverage run --source=info,search --omit=*/migrations/* ./manage.py test

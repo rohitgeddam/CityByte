@@ -51,14 +51,11 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false" style="font-size: 2rem; font-weight: bolder; padding: 1rem 3rem;">
-                        <!-- {{user.username|title}} -->
                         Settings
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'profile_page' %}">Profile</a>
-                        <!-- <a class="dropdown-item" href="{% url 'logout' %}">Logout</a> -->
-                        <!-- <a class="dropdown-item" href="/sign-out">Google logout</a> -->
-                         <a class="dropdown-item" href="{%url 'sign_out' %}">Logout</a>
+                        <a class="dropdown-item" href="{%url 'sign_out' %}">Logout</a>
                     </div>
                 </li>
             </ul>

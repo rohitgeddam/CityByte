@@ -1,4 +1,5 @@
 import os
+import time
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -26,6 +27,8 @@ def sign_in(request):
 def auth_receiver(request):
     print(request.POST)
     token = request.POST['credential']
+
+    time.sleep(1) # delay is needed in order to ensure creation of token before retrieving user's data
 
     try:
         user_data = id_token.verify_oauth2_token(
@@ -56,7 +59,6 @@ def auth_receiver(request):
     return redirect('main_page')
 
 def sign_out(request):
-    print(request.session)
     try:
         del request.session['user_data']
     except Exception as e:

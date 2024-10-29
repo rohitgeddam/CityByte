@@ -22,7 +22,6 @@ gevent==22.10.2
 geventhttpclient==2.0.8
 google-api-python-client==2.149.0
 google-auth==2.35.0
-
 greenlet==2.0.1
 hiredis==2.0.0
 idna==3.4

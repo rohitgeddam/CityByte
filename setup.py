@@ -38,11 +38,7 @@ def fullsplit(path, result=None):
     return fullsplit(head, [tail] + result)
 
 
-EXCLUDE_FROM_PACKAGES = [
-    "django.conf.project_template",
-    "django.conf.app_template",
-    "django.bin",
-]
+EXCLUDE_FROM_PACKAGES = ["django.conf.project_template", "django.conf.app_template", "django.bin"]
 
 
 def is_package(package_name):
@@ -63,9 +59,7 @@ django_dir = "django"
 
 for dirpath, dirnames, filenames in os.walk(django_dir):
     # Ignore PEP 3147 cache dirs and those whose names start with '.'
-    dirnames[:] = [
-        d for d in dirnames if not d.startswith(".") and d != "__pycache__"
-    ]
+    dirnames[:] = [d for d in dirnames if not d.startswith(".") and d != "__pycache__"]
     parts = fullsplit(dirpath)
     package_name = ".".join(parts)
     if "__init__.py" in filenames and is_package(package_name):

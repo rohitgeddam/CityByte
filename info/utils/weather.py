@@ -21,9 +21,6 @@ class WeatherBit(WeatherUtilBase):
         params = self._url.with_default_params({"city": city})
         params.update(kwargs)
         response = requests.request(
-            "GET",
-            str(self._url.get_url(path="/current")),
-            headers=self._url.with_default_headers(),
-            params=params,
+            "GET", str(self._url.get_url(path="/current")), headers=self._url.with_default_headers(), params=params
         )
         return response.json()

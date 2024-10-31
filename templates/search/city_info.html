@@ -102,6 +102,40 @@
         }
         a:hover { text-decoration: none; }
 
+        /* Modal background */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Modal content */
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+
+        /* Close button */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+
+
 
     </style>
  
@@ -249,6 +283,18 @@
             <div class="card" style="width: 18rem;">
                 <img src="{% url 'info:place_photo' %}?fsq_id={{ place.fsq_id }}" class="card-img-top" alt="{{ place.name }}">
                 <a href="{% url 'info:add_to_itinerary' city=city spot_name=place.name address=place.location.formatted_address category=place.categories.0.name %}" class="btn btn-primary">Add to Itinerary</a>
+                <div id="itinerarySuccessModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" onclick="closeModal()">&times;</span>
+                        <p>Added to itinerary successfully!</p>
+                    </div>
+                </div>
+                <div id="itineraryPresentModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" onclick="closePresentModal()">&times;</span>
+                        <p>Already present</p>
+                    </div>
+                </div>
                 <a href="{% url 'info:remove_from_itinerary' city=city spot_name=place.name %}" class="btn btn-danger">Remove from Itinerary</a>
                 <div class="card-body">
                     <h5 class="card-title">{{ place.name }}</h5>
@@ -366,6 +412,48 @@
         favBtn.classList.toggle("checked");
  
     }
+
+    document.addEventListener('click', function(e) {
+    // Adjust this to match your button's class
+    if (e.target.classList.contains('btn-primary')) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        const url = e.target.getAttribute('href');
+
+        // Make the AJAX request
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show the modal if the response is successful
+                    const modal = document.getElementById('itinerarySuccessModal');
+                    modal.style.display = 'block';
+                } else {
+                    const modal = document.getElementById('itineraryPresentModal');
+                    modal.style.display = 'block';
+                }
+            })
+                    .catch(error => console.error('Fetch error:', error)); // Log fetch errors
+        }
+    });
+
+        // Function to close the modal
+    function closeModal() {
+        document.getElementById('itinerarySuccessModal').style.display = 'none';
+    }
+    function closePresentModal() {
+        document.getElementById('itineraryPresentModal').style.display = 'none';
+    }
+
+        // Close the modal if user clicks outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('itinerarySuccessModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+
 </script>
  
 {% endblock %}

@@ -27,9 +27,9 @@ def sign_in(request):
 
 @csrf_exempt
 def auth_receiver(request):
-    if request.method == 'POST':
-        if 'credential' not in request.POST:
-            return JsonResponse({'error': 'Missing credential'}, status=403)
+    if request.method == "POST":
+        if "credential" not in request.POST:
+            return JsonResponse({"error": "Missing credential"}, status=403)
         token = request.POST["credential"]
 
     time.sleep(1)  # delay is needed in order to ensure creation of token before retrieving user's data
@@ -59,4 +59,3 @@ def sign_out(request):
         del request.session["user_data"]
     logout(request)
     return redirect("sign_in")
-

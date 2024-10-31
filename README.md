@@ -1,35 +1,32 @@
 # CityByte Project 2
 
-[![Test](https://github.com/rohitgeddam/CityByte/actions/workflows/django.yml/badge.svg)](https://github.com/rohitgeddam/CityByte/actions/workflows/django.yml)
-[![codecov](https://codecov.io/gh/rohitgeddam/FindMyRoomie/branch/main/graph/badge.svg?token=PCOHJETYCD)](https://codecov.io/gh/rohitgeddam/FindMyRoomie)
-[![code_size](https://img.shields.io/github/languages/code-size/rohitgeddam/CityByte)](https://github.com/rohitgeddam/CityByte) 
-[![repo_size](https://img.shields.io/github/repo-size/rohitgeddam/CityByte)](https://github.com/rohitgeddam/CityByte)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7155519.svg)](https://doi.org/10.5281/zenodo.7155519)
+[![Test](https://github.com/Gunabana/CityByte/actions/workflows/django.yml/badge.svg)](https://github.com/Gunabana/CityByte/actions/workflows/django.yml)
+[![codecov](https://codecov.io/gh/Gunabana/CityByte/branch/main/graph/badge.svg?token=PCOHJETYCD)](https://codecov.io/gh/Gunabana/CityByte)
+[![code_size](https://img.shields.io/github/languages/code-size/Gunabana/CityByte)](https://github.com/Gunabana/CityByte) 
+[![repo_size](https://img.shields.io/github/repo-size/Gunabana/CityByte)](https://github.com/Gunabana/CityByte)
+[![DOI](https://zenodo.org/badge/878084377.svg)](https://doi.org/10.5281/zenodo.14015564)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub issues](https://img.shields.io/github/issues/rohitgeddam/CityByte.svg)](https://GitHub.com/rohitgeddam/CityByte/issues/)
-[![GitHub issues-closed](https://img.shields.io/github/issues-closed/rohitgeddam/CityByte.svg)](https://GitHub.com/rohitgeddam/CityByte/issues?q=is%3Aissue+is%3Aclosed)
-[![GitHub version](https://img.shields.io/github/v/release/rohitgeddam/CityByte)](https://github.com/rohitgeddam/CityByte/releases)
+[![GitHub issues](https://img.shields.io/github/issues/Gunabana/CityByte.svg)](https://GitHub.com/Gunabana/CityByte/issues/)
+[![GitHub issues-closed](https://img.shields.io/github/issues-closed/Gunabana/CityByte.svg)](https://GitHub.com/Gunabana/CityByte/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub version](https://img.shields.io/github/v/release/Gunabana/CityByte)](https://github.com/Gunabana/CityByte/releases)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
 ## Introduction
-New and improved! Several new features and bug fixes were implemented to show significant improvement from Project 1.
+New and improved! Several new features and bug fixes were implemented to show significant improvement from prior work.
 
-Below are the new features and improvements we made:
-1. Implemented a wish list/to-go list to save interesting locations so you can come back and look at them later :fire:
-2. Implement Caching to get API results faster :rocket:
-3. Created a signup/login page - having an account goes a long way when we add new features that are customized for the user!
-4. Comment Page - you can comment on the place and look at all the other comments that have been posted!
-5. Fixed WeatherApi Bug :bug:
-6. Implemented social media page and support contact information. 
+### Updates! - Phase 3
+* Google Account Sign-up and Logins - quick and easy sign-up using Google's authentication services
+* UI Improvements - your eyes will no longer hurt while looking at the site (the bar was low)
+* Trip Itinerary - Save the locations you want to go in each city so you don't forget!
 
-## Old Project - In Brief
+### Old Project - Phase 1
 Below is a video of the old project:
 
 [<img width="902" alt="image" src="https://user-images.githubusercontent.com/46688470/204404965-d3084c6c-b062-4eec-8b10-0ef95a577bd6.png">](https://drive.google.com/file/d/1FVJDir9ZufbAiUGe7AfzZvTfF7HWr58e/view?usp=sharing)
 
 
-## New Project
+### Old Project - Phase 2
 Below is a video of the significant improvements we made:
 
 
@@ -45,16 +42,14 @@ https://drive.google.com/file/d/1sUewnnTpuXX3s8nMnpnR0WZhVM-c8L1a/view?usp=shari
 Improvements can be seen in the follwing load testing reportsusing the LocustIO:
 
 ### Before Caching Implementation:
-100 concurrent users:
-![Before_cache_100](https://user-images.githubusercontent.com/53405794/205815400-ea00d406-acef-48d5-a0b8-dd2e71da6a73.png)  
+
 1000 concurrent users:
 ![Before_cache_1000](https://user-images.githubusercontent.com/53405794/205815413-6821c1e6-dc03-41da-8ed8-70267a6becbd.png)
+
 10000 concurrent users:
 ![before_cache_10000](https://user-images.githubusercontent.com/53405794/205815417-a3adc3c8-2e8b-4c41-b854-fc78b781b4eb.png)
 
 ### After Caching Implementation:  
-100 concurrent users:
-![After_cache_100](https://user-images.githubusercontent.com/53405794/205815892-82ff37e1-0b33-45e9-bc62-967293a77848.png)
 
 1000 concurrent users:
 ![Afte_cache_1000](https://user-images.githubusercontent.com/53405794/205815903-aa5d0252-af46-4ae1-be78-162be476c09c.png)
@@ -70,48 +65,48 @@ Results:
 
 #### 1. Clone the repository:  
 
-   `git clone https://github.com/rohitgeddam/CityByte.git`
+```
+git clone https://github.com/rohitgeddam/CityByte.git
+```
 
-#### 2. Setup the virtual environment:  
-    
-`
-    python -m venv venv
-`
+
+#### 2. Setup the virtual environment:
+
+```
+python -m venv venv
+```
 
 
 #### 3. Activate the virtual environment:  
-
-    On Mac/Linux:    
-
-`
-      source venv/bin/activate
-`
+On Mac/Linux: 
+```
+source venv/bin/activate
+```
       
-    On Windows:    
-    
-`
-      venv\Scripts\activate
-`
+On Windows: 
+```
+venv\Scripts\activate
+```
    
 
 #### 4. Install required modules and libraries:  
 
-`
-    pip install -r requirements.txt
-`
+```
+pip install -r requirements.txt
+```
 
 
-#### 5. Create .env file at ./CityByte using the below template.
+#### 5a. Create .env file at ./CityByte using the below template.
    
 ```
-    GEODB_X_RAPID_API_KEY=""
-    GEODB_X_RAPID_API_HOST=""
-    AMADEUS_API_KEY=""
-    AMADEUS_API_SECRET_KEY=""
-    UNSPLASH_API_KEY=""
-    FOURSQUARE_API_KEY=""
-    WEATHER_BIT_X_RAPID_API_KEY=""
-    WEATHER_BIT_X_RAPID_API_HOST=""
+GEODB_X_RAPID_API_KEY=""
+GEODB_X_RAPID_API_HOST=""
+AMADEUS_API_KEY=""
+AMADEUS_API_SECRET_KEY=""
+UNSPLASH_API_KEY=""
+FOURSQUARE_API_KEY=""
+WEATHER_BIT_X_RAPID_API_KEY=""
+WEATHER_BIT_X_RAPID_API_HOST=""
 ```
 Create an account in the below websites to Fetch API keys and use them in the above template.  
 * [GeoDB Cities API](https://rapidapi.com/wirefreethought/api/geodb-cities/details)
@@ -119,6 +114,18 @@ Create an account in the below websites to Fetch API keys and use them in the ab
 * [Amadeus API](https://developers.amadeus.com/)
 * [Unsplash API](https://unsplash.com/developers)
 * [Foursquare API](https://location.foursquare.com/developer/)  
+
+#### 5b. Register your Google OAuth 2.0 Client IDs following the steps below.
+1. Log in to https://console.cloud.google.com
+2. Create a new Project
+3. Navigate to APIs & Services
+4. Select "Create Credential" > "OAuth client ID"
+5. For the application type, choose "Web application" and enter a name for it
+6. For authorized JavaScript origins, enter "http://localhost", "http://localhost:8000", and "http://127.0.0.1:8000"
+7. For authorized redirect URIs, enter "http://localhost:8000/auth-receiver"
+8. After this, you will be shown your Client ID and Client secret
+9. Add `GOOGLE_OAUTH2_ID=""` and `GOOGLE_OAUTH2_SECRET=""` to the .env file with the Client ID and Client secret within their respective quotes
+10. Add the Client ID to `data-client_id=""` in login.html
 
 #### 6. Set-up REDIS
 * Follow the instructions in [Getting Started](https://redis.io/docs/getting-started/) to Install Redis in your local environment.
@@ -133,19 +140,17 @@ Create an account in the below websites to Fetch API keys and use them in the ab
 
 Now, you can run the application.
 #### 7. Run the application:  
-   
-   ``` 
-   python manage.py migrate
-   python manage.py runserver
-   ```
+``` 
+python manage.py migrate
+python manage.py runserver
+```
   
 ## After adding another field to Model
 Django's way of propagating changes you make to your models (adding a field, deleting a model, etc.) into your database schema.
-
-   ```
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
+```
+python manage.py makemigrations
+python manage.py migrate
+```
 
 ## Automatic tools - GitHub Actions
  
@@ -265,8 +270,12 @@ This project is deployed on AWS and is live at http://3.88.233.194:8000/
 * Addition of search bar with category filter, that will help the user to search based on his/ her requirements.
 * To run multiple API requests simultaneously, multithreading will be used.
 
-## Team Members
+## Current Team Members
+* Brody Bond - bbond
+* Chaitanya Nagulapalli - cknagula
+* Tristan Hall - tdhall6
 
+## Prior Team Members
 * Nirav Shah - nshah28
 * Vishwa Gandhi - vgandhi
 * Pradyumna Khawas - ppkhawas

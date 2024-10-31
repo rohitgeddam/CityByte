@@ -30,20 +30,12 @@ def addTofav(request):
     data = "removed"
 
     # if count is 0 add to list else remove
-    count = FavCityEntry.objects.filter(
-        city=city, country=country, user=request.user
-    ).count()
+    count = FavCityEntry.objects.filter(city=city, country=country, user=request.user).count()
 
     if count > 0:
-        FavCityEntry.objects.filter(
-            city=city, country=country, user=request.user
-        ).delete()
-
+        FavCityEntry.objects.filter(city=city, country=country, user=request.user).delete()
     else:
-        FavCityEntry.objects.create(
-            city=city, country=country, user=request.user
-        )
-
+        FavCityEntry.objects.create(city=city, country=country, user=request.user)
         data = "added"
 
     return JsonResponse({"data": data})
@@ -54,9 +46,7 @@ def place_photo(request):
     photo_link = cache.get(f"photo-link-{request.GET.get('fsq_id')}")
 
     if not photo_link:
-        photo_link = FourSquarePlacesHelper().get_place_photo(
-            fsq_id=request.GET.get("fsq_id")
-        )
+        photo_link = FourSquarePlacesHelper().get_place_photo(fsq_id=request.GET.get("fsq_id"))
         cache.set(f"photo-link-{request.GET.get('fsq_id')}", photo_link)
     return redirect(photo_link)
 
@@ -90,9 +80,7 @@ def info_page(request):
     weather_info = cache.get(f"{city}-weather")
     if not weather_info:
         try:
-            weather_info = WeatherBitHelper().get_city_weather(
-                city=city, country=country
-            )["data"][0]
+            weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
 
             weather_info["sunrise"] = (
                 datetime.strptime(weather_info["sunrise"], "%H:%M")
@@ -104,9 +92,7 @@ def info_page(request):
                 .astimezone(pytz.timezone(weather_info["timezone"]))
                 .strftime("%I:%M")
             )
-            weather_info["ts"] = datetime.fromtimestamp(
-                weather_info["ts"]
-            ).strftime("%m-%d-%Y, %H:%M")
+            weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
 
             cache.set(f"{city}-weather", weather_info)
         except Exception:
@@ -115,20 +101,14 @@ def info_page(request):
     dining_info = cache.get(f"{city}-dinning")
     if not dining_info:
         dining_info = FourSquarePlacesHelper().get_places(
-            city=f"{city}, {country}",
-            categories="13065",
-            sort="RELEVANCE",
-            limit=5,
+            city=f"{city}, {country}", categories="13065", sort="RELEVANCE", limit=5
         )
         cache.set(f"{city}-dinning", dining_info)
 
     airport_info = cache.get(f"{city}-airport")
     if not airport_info:
         airport_info = FourSquarePlacesHelper().get_places(
-            city=f"{city}, {country}",
-            categories="19040",
-            sort="RELEVANCE",
-            limit=5,
+            city=f"{city}, {country}", categories="19040", sort="RELEVANCE", limit=5
         )
 
         cache.set(f"{city}-airport", airport_info)
@@ -136,10 +116,7 @@ def info_page(request):
     outdoor_info = cache.get(f"{city}-outdoor")
     if not outdoor_info:
         outdoor_info = FourSquarePlacesHelper().get_places(
-            city=f"{city}, {country}",
-            categories="16000",
-            sort="RELEVANCE",
-            limit=5,
+            city=f"{city}, {country}", categories="16000", sort="RELEVANCE", limit=5
         )
 
         cache.set(f"{city}-outdoor", outdoor_info)
@@ -147,10 +124,7 @@ def info_page(request):
     arts_info = cache.get(f"{city}-arts")
     if not arts_info:
         arts_info = FourSquarePlacesHelper().get_places(
-            city=f"{city}, {country}",
-            categories="10000",
-            sort="RELEVANCE",
-            limit=5,
+            city=f"{city}, {country}", categories="10000", sort="RELEVANCE", limit=5
         )
 
         cache.set(f"{city}-arts", arts_info)
@@ -160,17 +134,8 @@ def info_page(request):
         photo_link = UnplashCityPhotoHelper().get_city_photo(city=city)
         cache.set(f"{city}-photolink", photo_link)
 
-    comments = Comment.objects.filter(city=city, country=country).order_by(
-        "-created_on"
-    )
-    isInFav = (
-        True
-        if FavCityEntry.objects.filter(
-            city=city, country=country, user=request.user
-        ).count()
-        > 0
-        else False
-    )
+    comments = Comment.objects.filter(city=city, country=country).order_by("-created_on")
+    isInFav = True if FavCityEntry.objects.filter(city=city, country=country, user=request.user).count() > 0 else False
     return render(
         request,
         "search/city_info.html",
@@ -199,7 +164,6 @@ def profile_page(request):
         .annotate(city_count=Count("city_name"))
         .order_by("-city_count")[:10]
     )
-
     return render(
         request,
         "profile/profile.html",

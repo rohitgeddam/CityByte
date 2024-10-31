@@ -8,3 +8,4 @@ urlpatterns = [
     path('itinerary/remove/<str:city>/<str:spot_name>/', remove_from_itinerary, name='remove_from_itinerary'),
     path('itinerary/', itinerary_page, name='itinerary_page'),
 ]
+

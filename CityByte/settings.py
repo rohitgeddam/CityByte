@@ -13,9 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-cm&ek+rlsg%=@47_^f7@^_d0o6^#azfb%oel1h8x65c06*b2u8"
-)
+SECRET_KEY = "django-insecure-cm&ek+rlsg%=@47_^f7@^_d0o6^#azfb%oel1h8x65c06*b2u8"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,6 +34,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "search",
     "info",
+    "CityByte",
 ]
 
 MIDDLEWARE = [
@@ -51,6 +50,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "CityByte.urls"
 
+GOOGLE_OAUTH2_CLIENT_ID = env("GOOGLE_OAUTH2_ID")
+GOOGLE_OAUTH2_CLIENT_SECRET = env("GOOGLE_OAUTH2_SECRET")
+SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 TEMPLATES = [
@@ -64,9 +68,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-            ],
+            ]
         },
-    },
+    }
 ]
 
 WSGI_APPLICATION = "CityByte.wsgi.application"
@@ -75,30 +79,17 @@ WSGI_APPLICATION = "CityByte.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 
@@ -136,38 +127,28 @@ GEODB_CONFIG = {
     "protocol": "https",
     "host": "wft-geo-db.p.rapidapi.com",
     "port": 443,
-    "headers": {
-        "x-rapidapi-key": env("GEODB_X_RAPID_API_KEY"),
-        "x-rapidapi-host": env("GEODB_X_RAPID_API_HOST"),
-    },
+    "headers": {"x-rapidapi-key": env("GEODB_X_RAPID_API_KEY"), "x-rapidapi-host": env("GEODB_X_RAPID_API_HOST")},
 }
 
 AMADEUS_CONFIG = {
     "protocol": "https",
     "host": "test.api.amadeus.com",
     "port": 443,
-    "headers": {
-        "API_KEY": env("AMADEUS_API_KEY"),
-        "API_SECRET_KEY": env("AMADEUS_API_SECRET_KEY"),
-    },
+    "headers": {"API_KEY": env("AMADEUS_API_KEY"), "API_SECRET_KEY": env("AMADEUS_API_SECRET_KEY")},
 }
 
 UNSPLASH_CONFIG = {
     "protocol": "https",
     "host": "api.unsplash.com",
     "port": 443,
-    "headers": {
-        "Authorization": f"Client-ID {env('UNSPLASH_API_KEY')}",
-    },
+    "headers": {"Authorization": f"Client-ID {env('UNSPLASH_API_KEY')}"},
 }
 
 FOURSQUARE_CONFIG = {
     "protocol": "https",
     "host": "api.foursquare.com",
     "port": 443,
-    "headers": {
-        "Authorization": env("FOURSQUARE_API_KEY"),
-    },
+    "headers": {"Authorization": env("FOURSQUARE_API_KEY")},
 }
 
 WEATHER_BIT_CONFIG = {
@@ -183,10 +164,7 @@ WEATHER_BIT_CONFIG = {
 
 LOGIN_REDIRECT_URL = "/"
 STATIC_URL = "static/"
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    "/var/www/static/",
-]
+STATICFILES_DIRS = [BASE_DIR / "static", "/var/www/static/"]
 LOGOUT_REDIRECT_URL = "/"
 
 CRISPY_TEMPLATE_PACK = "bootstrap"

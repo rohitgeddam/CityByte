@@ -53,4 +53,4 @@ jobs:
     - name: Upload cov
       uses: codecov/codecov-action@v2
       with:
-        token: ${{ secretes.CODECOV_TOKEN }}
+        token: ${{ secrets.CODECOV_TOKEN }}

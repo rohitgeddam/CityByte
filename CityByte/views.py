@@ -7,7 +7,7 @@ from django.contrib.auth import login, logout
 
 from django.urls import reverse_lazy
 from django.views import generic
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from google.oauth2 import id_token
@@ -27,8 +27,10 @@ def sign_in(request):
 
 @csrf_exempt
 def auth_receiver(request):
-    print(request.POST)
-    token = request.POST["credential"]
+    if request.method == "POST":
+        if "credential" not in request.POST:
+            return JsonResponse({"error": "Missing credential"}, status=403)
+        token = request.POST["credential"]
 
     time.sleep(1)  # delay is needed in order to ensure creation of token before retrieving user's data
 
@@ -37,7 +39,6 @@ def auth_receiver(request):
     except ValueError:
         return HttpResponse(status=403)
 
-    # Get the user's email, first, and last name
     email = user_data.get("email")
     first_name = user_data.get("given_name")
     last_name = user_data.get("family_name")
@@ -47,7 +48,6 @@ def auth_receiver(request):
         username=email, defaults={"email": email, "first_name": first_name, "last_name": last_name}
     )
 
-    #  Log the user in
     login(request, user)
     request.session["user_data"] = user_data
 
@@ -55,14 +55,7 @@ def auth_receiver(request):
 
 
 def sign_out(request):
-    try:
+    if "user_data" in request.session:
         del request.session["user_data"]
-    except Exception as e:
-        print(f"Error Logging Out - Exception: {e}")
-
-    try:
-        logout(request)
-    except Exception as e:
-        print(f"Error Logging Out 2 - Exception: {e}")
-
+    logout(request)
     return redirect("sign_in")

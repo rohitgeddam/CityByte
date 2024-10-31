@@ -296,6 +296,18 @@
                     </div>
                 </div>
                 <a href="{% url 'info:remove_from_itinerary' city=city spot_name=place.name %}" class="btn btn-danger">Remove from Itinerary</a>
+                <div id="itineraryRemoveSuccessModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" onclick="RemovecloseModal()">&times;</span>
+                        <p>Removed from itinerary successfully!</p>
+                    </div>
+                </div>
+                <div id="itineraryRemovedModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" onclick="RemovedModal()">&times;</span>
+                        <p>Already removed</p>
+                    </div>
+                </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ place.name }}</h5>
                     <p class="card-text">{{ place.location.formatted_address }}</p>
@@ -453,6 +465,45 @@
         }
     }
 
+    document.addEventListener('click', function(e) {
+    // Adjust this to match your button's class
+    if (e.target.classList.contains('btn-danger')) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        const url = e.target.getAttribute('href');
+
+        // Make the AJAX request
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show the modal if the response is successful
+                    const modal = document.getElementById('itineraryRemoveSuccessModal');
+                    modal.style.display = 'block';
+                } else {
+                    const modal = document.getElementById('itineraryRemovedModal');
+                    modal.style.display = 'block';
+                }
+            })
+                    .catch(error => console.error('Fetch error:', error)); // Log fetch errors
+        }
+    });
+
+        // Function to close the modal
+    function RemovecloseModal() {
+        document.getElementById('itineraryRemoveSuccessModal').style.display = 'none';
+    }
+    function RemovedModal() {
+        document.getElementById('itineraryRemovedModal').style.display = 'none';
+    }
+
+        // Close the modal if user clicks outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('itineraryRemoveSuccessModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
 
 </script>
  

@@ -1,6 +1,6 @@
 from urllib import request
 from django.test import TestCase
-from info.helpers.places import FourSquarePlacesHelper
+from info.helpers.places import *
 from django.shortcuts import render
 from info.helpers.weather import WeatherBitHelper
 from datetime import datetime
@@ -19,9 +19,7 @@ image_formats = ("image/png", "image/jpeg", "image/gif")
 
 class CityByte_testcase(TestCase):
     def setUp(self):
-        get_user_model().objects.create_user(
-            "admin", "admin.@simpson.net", "admin"
-        )
+        get_user_model().objects.create_user("admin", "admin.@simpson.net", "admin")
 
     def test_main_page(self):
         assert render(request, "search/search.html").status_code == 200
@@ -34,22 +32,18 @@ class CityByte_testcase(TestCase):
             assert True
 
     def test_photo(self):
-        photo_link = FourSquarePlacesHelper().get_place_photo(
-            fsq_id="518a71ab498e430858000827"
-        )
+        photo_link = FourSquarePlacesHelper().get_place_photo(fsq_id="518a71ab498e430858000827")
         site = urlopen(photo_link)
         meta = site.info()
         if meta["content-type"] in image_formats:
             assert True
-            
+
     def test_info_page(self):
         city = "New York City"
         country = "US"
 
         try:
-            weather_info = WeatherBitHelper().get_city_weather(
-                city=city, country=country
-            )["data"][0]
+            weather_info = WeatherBitHelper().get_city_weather(city=city, country=country)["data"][0]
             weather_info["sunrise"] = (
                 datetime.strptime(weather_info["sunrise"], "%H:%M")
                 .astimezone(pytz.timezone(weather_info["timezone"]))
@@ -60,9 +54,7 @@ class CityByte_testcase(TestCase):
                 .astimezone(pytz.timezone(weather_info["timezone"]))
                 .strftime("%I:%M")
             )
-            weather_info["ts"] = datetime.fromtimestamp(
-                weather_info["ts"]
-            ).strftime("%m-%d-%Y, %H:%M")
+            weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
 
         except Exception:
             # api limit exceeded
@@ -71,28 +63,16 @@ class CityByte_testcase(TestCase):
         # commentForm = CommentForm()
 
         dining_info = FourSquarePlacesHelper().get_places(
-            city=f"{city}, {country}",
-            categories="13065",
-            sort="RELEVANCE",
-            limit=5,
+            city=f"{city}, {country}", categories="13065", sort="RELEVANCE", limit=5
         )
         outdoor_info = FourSquarePlacesHelper().get_places(
-            city=f"{city}, {country}",
-            categories="16000",
-            sort="RELEVANCE",
-            limit=5,
+            city=f"{city}, {country}", categories="16000", sort="RELEVANCE", limit=5
         )
         airport_info = FourSquarePlacesHelper().get_places(
-            city=f"{city}, {country}",
-            categories="19040",
-            sort="RELEVANCE",
-            limit=5,
+            city=f"{city}, {country}", categories="19040", sort="RELEVANCE", limit=5
         )
         arts_info = FourSquarePlacesHelper().get_places(
-            city=f"{city}, {country}",
-            categories="10000",
-            sort="RELEVANCE",
-            limit=5,
+            city=f"{city}, {country}", categories="10000", sort="RELEVANCE", limit=5
         )
         photo_link = UnplashCityPhotoHelper().get_city_photo(city=city)
         # comments = Comment.objects.filter(city=city, country=country).order_by(
@@ -115,9 +95,7 @@ class CityByte_testcase(TestCase):
             assert True
 
     def TestModels(TestCase):
-        user = get_user_model().objects.create_user(
-            "admin@citybyte.com", "password"
-        )
+        user = get_user_model().objects.create_user("admin@citybyte.com", "password")
         assert user
 
     def test_can_access_page(self):

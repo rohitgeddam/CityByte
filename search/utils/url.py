@@ -1,13 +1,5 @@
 class URL:
-    def __init__(
-        self,
-        protocol: str,
-        host: str,
-        port: int,
-        path: str = "/",
-        params: dict = None,
-        headers: dict = None,
-    ):
+    def __init__(self, protocol: str, host: str, port: int, path: str = "/", params: dict = None, headers: dict = None):
         self.protocol = protocol
         self.host = host
         self.port = port

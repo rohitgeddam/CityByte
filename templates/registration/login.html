@@ -1,28 +1,38 @@
 {% extends '../base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}Login{% endblock %}
- 
- 
+
 {% block content %}
- 
-<style>
- 
-</style>
-<!-- templates/registration/login.html -->
-<div class="container">
- 
- 
-   <div class="card m-4" style="width: 500px;">
-    <h5 class="card-header">Login</h5>
-    <div class="card-body">
-        <form method="post">
-            {% csrf_token %}
-            {{ form |crispy }}
-            <button type="submit" class="btn btn-large btn-primary mt-4">Log In</button>
-            <hr>
-            Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
-        </form>
+<script src="https://accounts.google.com/gsi/client" async></script>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card" style="width: 500px;">
+        <h5 class="card-header text-center">Login</h5>
+        <div class="card-body text-center">
+            <form method="post">
+                {% csrf_token %}
+                {{ form |crispy }}
+                <button type="submit" class="btn btn-large btn-primary mt-4">Log In</button>
+                <hr>
+                Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
+                <div class="mt-4 d-flex justify-content-center">
+                    <div id="g_id_onload"
+                        data-client_id="460246555632-cll3rpols67n6ge7fc8t2sjlnc2rvnlj.apps.googleusercontent.com"
+                        data-context="signin"
+                        data-ux_mode="popup"
+                        data-login_uri="http://localhost:8000/auth-receiver"
+                        data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin"
+                        data-type="standard"
+                        data-shape="pill"
+                        data-theme="outline"
+                        data-text="signin_with"
+                        data-size="large"
+                        data-logo_alignment="left">
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}

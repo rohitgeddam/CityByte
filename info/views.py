@@ -230,22 +230,6 @@ def remove_from_itinerary(request, city, spot_name):
     else:
         return JsonResponse({'status': 'error', 'message': 'Item not found.'}, status=404)
 
-
-# def city_view(request, city):
-#     itinerary = ItineraryItem.objects.filter(user=request.user, city=city)
-#     return render(request, 'city_template.html', {'itinerary': itinerary,'weather_info': weather_info,})
-
-# @login_required
-# def city_view(request, city):
-#     # Fetch the user's itinerary items for the specific city
-#     itinerary_items = ItineraryItem.objects.filter(user=request.user, city=city)
-
-#     # Render the city_info.html template with the itinerary items
-#     return render(request, 'search/city_info.html', {
-#         'itinerary_items': itinerary_items,
-#         'city': city,
-#     })
-
 @require_http_methods(["GET"])
 def itinerary_page(request):
     city = request.GET.get("city")

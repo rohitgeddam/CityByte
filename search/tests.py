@@ -13,6 +13,7 @@ from django.urls import reverse
 from search.helpers.photo import UnplashCityPhotoHelper
 from urllib.request import urlopen
 from unittest.mock import patch
+from info.models import FavCityEntry
 
 image_formats = ("image/png", "image/jpeg", "image/gif")
 
@@ -101,12 +102,9 @@ class CityByte_testcase(TestCase):
     def test_can_access_page(self):
         login = self.client.login(username="admin", password="admin")
         self.assertTrue(login)
-        # self.assertEqual(response.status_code,200)
 
     def test_user_logout(self):
-        # client=Client()
         self.client.logout()
-        # response = self.client.get('/admin/')
         self.assertTrue(True)
 
     def test_profile_page(self):
@@ -251,3 +249,51 @@ class AuthErrorTests(TestCase):
             reverse("signup"), {"username": "newuser", "password1": "password123", "password2": "password123"}
         )
         self.assertFormError(response, "form", "password2", "This password is too common.")
+
+
+class InfoViewsTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = get_user_model().objects.create_user(username="test_user", password="test_password")
+        self.client.login(username='test_user', password='test_password')
+
+    def test_add_to_fav(self):
+        response = self.client.get(reverse('addToFav'), {'city': 'Paris', 'country': 'France'})
+        self.assertEqual(response.json()['data'], 'added')
+        self.assertTrue(FavCityEntry.objects.filter(city='Paris', country='France', user=self.user).exists())
+
+    def test_add_and_remove_to_fave(self):
+        response = self.client.get(reverse('addToFav'), {'city': 'Paris', 'country': 'France'})
+        self.assertEqual(response.json()['data'], 'added')
+        self.assertTrue(FavCityEntry.objects.filter(city='Paris', country='France', user=self.user).exists())
+    
+        response = self.client.get(reverse('addToFav'), {'city': 'Paris', 'country': 'France'})
+        self.assertEqual(response.json()['data'], 'removed')
+        self.assertFalse(FavCityEntry.objects.filter(city='Paris', country='France', user=self.user).exists())
+
+    def test_add_to_fav_no_city_or_country(self):
+        response = self.client.get(reverse('addToFav'), {})
+        self.assertEqual(response.json()['data'], None)
+
+    def test_add_to_fav_unauthenticated_user(self):
+        self.client.logout()
+        response = self.client.get(reverse('addToFav'), {'city': 'Berlin', 'country': 'Germany'})
+        self.assertEqual(response.status_code, 302) 
+
+    def test_info_page(self):
+        response = self.client.get(reverse('info_page'), {'city': 'Paris', 'country': 'France'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Paris')
+        self.assertContains(response, 'France')
+
+    def test_profile_page(self):
+        response = self.client.get(reverse('profile_page'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profile/profile.html')
+
+    def test_profile_page_and_fav_city(self):
+        FavCityEntry.objects.create(city='Paris', country='France', user=self.user)
+        response = self.client.get(reverse('profile_page'))
+        self.assertContains(response, 'Paris')
+
+    # should add more tests relating to the profile page

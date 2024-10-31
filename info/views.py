@@ -33,10 +33,8 @@ def addTofav(request):
 
     if count > 0:
         FavCityEntry.objects.filter(city=city, country=country, user=request.user).delete()
-
     else:
         FavCityEntry.objects.create(city=city, country=country, user=request.user)
-
         data = "added"
 
     return JsonResponse({"data": data})

@@ -4,7 +4,7 @@ from urllib import request
 from django.test import TestCase, Client
 from info.helpers.places import *
 from django.shortcuts import render
-from info.helpers.weather import WeatherBitHelper
+from info.helpers.weather import WeatherBitHelper, FourSquarePlacesHelper
 from datetime import datetime
 from info.models import Comment
 from info.forms import CommentForm
@@ -126,7 +126,7 @@ class AuthTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = get_user_model().objects.create_user(
-            username="testing", password="test_password", email="test@email.com"
+            username="test_user", password="test_password", email="test@example.com"
         )
 
     def test_signup_view_renders_correct_template(self):
@@ -163,13 +163,13 @@ class AuthTests(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_sign_out_redirects_to_sign_in(self):
-        self.client.login(username="testuser", password="testpass")
+        self.client.login(username="test_user", password="test_password")
         response = self.client.get(reverse("sign_out"))
         self.assertRedirects(response, reverse("sign_in"))
         self.assertFalse(self.client.session.get("user_data"))
 
     def test_sign_out_handles_logout_exception(self):
-        self.client.login(username="testuser", password="testpass")
+        self.client.login(username="test_user", password="test_password")
         with patch("django.contrib.auth.logout", side_effect=Exception("Logout error")):
             response = self.client.get(reverse("sign_out"))
             self.assertRedirects(response, reverse("sign_in"))
@@ -183,7 +183,7 @@ class AuthTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_user_login_and_redirect(self):
-        response = self.client.login(username="testuser", password="testpass")
+        response = self.client.login(username="test_user", password="test_password")
         self.assertTrue(response)
         response = self.client.get(reverse("main_page"))
         self.assertEqual(response.status_code, 200)
@@ -192,11 +192,11 @@ class AuthTests(TestCase):
 class AuthErrorTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = get_user_model().objects.create_user(username="testuser", password="testpass")
+        self.user = get_user_model().objects.create_user(username="test_user", password="test_password")
 
     def test_signup_with_existing_username_fails(self):
         response = self.client.post(
-            reverse("signup"), {"username": "testuser", "password1": "newpassword123", "password2": "newpassword123"}
+            reverse("signup"), {"username": "test_user", "password1": "newpassword123", "password2": "newpassword123"}
         )
         self.assertFormError(response, "form", "username", "A user with that username already exists.")
 
@@ -219,7 +219,7 @@ class AuthErrorTests(TestCase):
         self.assertRedirects(response, reverse("sign_in"))  # Should redirect even if not logged in
 
     def test_user_login_with_incorrect_password(self):
-        response = self.client.login(username="testuser", password="wrongpass")
+        response = self.client.login(username="test_user", password="wrongpass")
         self.assertFalse(response)
 
     def test_signup_with_passwords_not_matching(self):

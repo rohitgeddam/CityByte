@@ -140,19 +140,17 @@ Create an account in the below websites to Fetch API keys and use them in the ab
 
 Now, you can run the application.
 #### 7. Run the application:  
-   
-   ``` 
-   python manage.py migrate
-   python manage.py runserver
-   ```
+``` 
+python manage.py migrate
+python manage.py runserver
+```
   
 ## After adding another field to Model
 Django's way of propagating changes you make to your models (adding a field, deleting a model, etc.) into your database schema.
-
-   ```
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
+```
+python manage.py makemigrations
+python manage.py migrate
+```
 
 ## Automatic tools - GitHub Actions
  

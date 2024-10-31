@@ -4,17 +4,15 @@ from urllib import request
 from django.test import TestCase, Client
 from info.helpers.places import *
 from django.shortcuts import render
-from info.helpers.weather import WeatherBitHelper, FourSquarePlacesHelper
+from info.helpers.weather import WeatherBitHelper
+from info.helpers.places import FourSquarePlacesHelper
 from datetime import datetime
-from info.models import Comment
-from info.forms import CommentForm
 from django.contrib.auth import get_user_model
 from django.test import Client
 from django.urls import reverse
 from search.helpers.photo import UnplashCityPhotoHelper
 from urllib.request import urlopen
 from unittest.mock import patch
-from django.http import HttpResponse
 
 image_formats = ("image/png", "image/jpeg", "image/gif")
 

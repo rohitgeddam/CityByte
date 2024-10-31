@@ -70,48 +70,48 @@ Results:
 
 #### 1. Clone the repository:  
 
-   `git clone https://github.com/rohitgeddam/CityByte.git`
+```
+git clone https://github.com/rohitgeddam/CityByte.git
+```
 
-#### 2. Setup the virtual environment:  
-    
-`
-    python -m venv venv
-`
+
+#### 2. Setup the virtual environment:
+
+```
+python -m venv venv
+```
 
 
 #### 3. Activate the virtual environment:  
-
-    On Mac/Linux:    
-
-`
-      source venv/bin/activate
-`
+On Mac/Linux: 
+```
+source venv/bin/activate
+```
       
-    On Windows:    
-    
-`
-      venv\Scripts\activate
-`
+On Windows: 
+```
+venv\Scripts\activate
+```
    
 
 #### 4. Install required modules and libraries:  
 
-`
-    pip install -r requirements.txt
-`
+```
+pip install -r requirements.txt
+```
 
 
 #### 5. Create .env file at ./CityByte using the below template.
    
 ```
-    GEODB_X_RAPID_API_KEY=""
-    GEODB_X_RAPID_API_HOST=""
-    AMADEUS_API_KEY=""
-    AMADEUS_API_SECRET_KEY=""
-    UNSPLASH_API_KEY=""
-    FOURSQUARE_API_KEY=""
-    WEATHER_BIT_X_RAPID_API_KEY=""
-    WEATHER_BIT_X_RAPID_API_HOST=""
+GEODB_X_RAPID_API_KEY=""
+GEODB_X_RAPID_API_HOST=""
+AMADEUS_API_KEY=""
+AMADEUS_API_SECRET_KEY=""
+UNSPLASH_API_KEY=""
+FOURSQUARE_API_KEY=""
+WEATHER_BIT_X_RAPID_API_KEY=""
+WEATHER_BIT_X_RAPID_API_HOST=""
 ```
 Create an account in the below websites to Fetch API keys and use them in the above template.  
 * [GeoDB Cities API](https://rapidapi.com/wirefreethought/api/geodb-cities/details)

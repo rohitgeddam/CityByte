@@ -121,8 +121,12 @@ class CityByte_testcase(TestCase):
         response = self.client.get(reverse("info:place_photo"))
         self.assertTrue(200, response.status_code)
 
+
 class ItineraryTests(TestCase):
+    """Tests for the ItineraryItem model and its associated views, ensuring correct functionality for user itineraries."""
+
     def setUp(self):
+        """Set up the test environment by creating a user and logging them in."""
         self.user = get_user_model().objects.create_user(
             username="testuser", password="Test@123"
         )
@@ -133,6 +137,7 @@ class ItineraryTests(TestCase):
         self.category = "Monument"
 
     def test_add_to_itinerary(self):
+        """Test that an itinerary item is added successfully to the user's itinerary."""
         response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ItineraryItem.objects.count(), 1)
@@ -144,6 +149,7 @@ class ItineraryTests(TestCase):
         self.assertEqual(item.category, self.category)
 
     def test_add_duplicate_to_itinerary(self):
+        """Test that adding a duplicate itinerary item returns a message and does not increase the item count."""
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
         response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
         self.assertEqual(response.status_code, 200)
@@ -151,6 +157,7 @@ class ItineraryTests(TestCase):
         self.assertContains(response, 'Already in itinerary.')
 
     def test_remove_from_itinerary(self):
+        """Test that an itinerary item can be successfully removed from the user's itinerary."""
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
         response = self.client.post(reverse('info:remove_from_itinerary', args=[self.city, self.spot_name]))
         self.assertEqual(response.status_code, 200)
@@ -158,6 +165,7 @@ class ItineraryTests(TestCase):
         self.assertContains(response, 'Removed from itinerary.')
 
     def test_add_multiple_items_to_itinerary(self):
+        """Test that multiple itinerary items can be added successfully."""
         spots = [
             {"name": "KBR Park", "address": "Kbr National Park (LV Prasad Marg), Hyderabad 591226, Telangana", "category": "Park"},
             {"name": "Tank Bund", "address": "Lumbani Park, Hyderabad 472708, Telangana", "category": "Landmarks and Outdoors"},
@@ -170,15 +178,7 @@ class ItineraryTests(TestCase):
             self.assertContains(response, 'Added to itinerary.')
 
         self.assertEqual(ItineraryItem.objects.count(), len(spots))
-    
-    # def test_itinerary_item_addition_invalid_city(self):
-    #     """Test adding an itinerary item with an invalid (empty) spot name."""
-    #     response = self.client.post(reverse('info:add_to_itinerary', args=['Hyderabad', self.spot_name, self.address, self.category]), {
-    #         'city': '' , 
-    #         'address': self.address,
-    #         'category': self.category,
-    #     })
-    #     self.assertEqual(response.status_code, 400)
+
     def test_json_response_structure_on_successful_add(self):
         """Test the structure of the JSON response on successful item addition."""
         response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
@@ -186,7 +186,7 @@ class ItineraryTests(TestCase):
         self.assertIn('status', json_response)
         self.assertIn('message', json_response)
         self.assertEqual(json_response['status'], 'success')
-    
+
     def test_json_response_structure_on_failed_remove(self):
         """Test JSON response structure on attempting to remove a non-existent item."""
         response = self.client.post(reverse('info:remove_from_itinerary', args=["NonExistentCity", "NonExistentSpot"]))
@@ -195,13 +195,13 @@ class ItineraryTests(TestCase):
         self.assertIn('status', json_response)
         self.assertIn('message', json_response)
         self.assertEqual(json_response['status'], 'error')
-    
+
     def test_unauthenticated_user_add_attempt(self):
         """Test that an unauthenticated user cannot add items to the itinerary."""
         self.client.logout()  # Log out to simulate an unauthenticated user
         response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
         self.assertEqual(response.status_code, 302)
-    
+
     def test_case_insensitive_city_and_category(self):
         """Test that city and category are case insensitive."""
         response_upper = self.client.post(reverse('info:add_to_itinerary', args=[self.city.upper(), self.spot_name, self.address, self.category.upper()]))
@@ -223,6 +223,7 @@ class ItineraryTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_remove_multiple_items(self):
+        """Test that multiple itinerary items can be removed successfully."""
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, "KBR Park", self.address, self.category]))
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, "Tank Bund", self.address, self.category]))
 
@@ -235,6 +236,7 @@ class ItineraryTests(TestCase):
         self.assertEqual(ItineraryItem.objects.count(), 0)
 
     def test_itinerary_item_fields(self):
+        """Test that the fields of an itinerary item are set correctly upon addition."""
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
         item = ItineraryItem.objects.first()
         self.assertEqual(item.user, self.user)
@@ -244,37 +246,32 @@ class ItineraryTests(TestCase):
         self.assertEqual(item.category, self.category)
 
     def test_add_to_itinerary_without_login(self):
+        """Test that unauthenticated users are redirected when trying to add an itinerary item."""
         self.client.logout()
         response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
         self.assertEqual(response.status_code, 302)
 
     def test_remove_from_itinerary_without_login(self):
+        """Test that unauthenticated users are redirected when trying to remove an itinerary item."""
         self.client.logout()
         response = self.client.post(reverse('info:remove_from_itinerary', args=[self.city, self.spot_name]))
         self.assertEqual(response.status_code, 302)
 
     def test_view_itinerary_page(self):
+        """Test that the itinerary page loads successfully."""
         response = self.client.get(reverse('info:itinerary_page'))
         self.assertEqual(response.status_code, 200)
 
-
     def test_itinerary_item_uniqueness_per_user(self):
+        """Test that different users can add the same itinerary item independently."""
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
-
-        # Log out the first user
         self.client.logout()
-
-        # Create a new user
         new_user = get_user_model().objects.create_user(username="user2", password="Test@123")
         self.client.login(username="user2", password="Test@123")
-
-        # New user tries to add the same item
         response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
-        
-        # Check if the new user was able to add the item (it should be allowed)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Added to itinerary.')
-        self.assertEqual(ItineraryItem.objects.count(), 2)  # Now there should be 2 items: one for each user
+        self.assertEqual(ItineraryItem.objects.count(), 2)
 
     def test_itinerary_item_string_representation(self):
         item = ItineraryItem.objects.create(
@@ -286,8 +283,8 @@ class ItineraryTests(TestCase):
         )
         self.assertEqual(str(item), f"{self.spot_name} in {self.city} - {self.user.username}")
 
-
     def test_added_on_field(self):
+        """Test the string representation of the ItineraryItem model."""
         item = ItineraryItem.objects.create(
             user=self.user,
             city=self.city,
@@ -299,29 +296,28 @@ class ItineraryTests(TestCase):
         self.assertTrue(item.added_on <= timezone.now())
 
     def test_itinerary_item_count(self):
-        # Check that a user can have multiple unique items
+        '''Check that a user can have multiple unique items'''
         for i in range(3):
             self.client.post(reverse('info:add_to_itinerary', args=[self.city, f"Spot {i}", self.address, self.category]))
-        self.assertEqual(ItineraryItem.objects.count(), 3) 
+        self.assertEqual(ItineraryItem.objects.count(), 3)
 
     def test_itinerary_item_category(self):
-        response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, 'New Category']))
+        """Test that the category of an itinerary item is set correctly upon addition."""
+        self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, 'New Category']))
         item = ItineraryItem.objects.first()
         self.assertEqual(item.category, 'New Category')
 
     def test_itinerary_with_different_users(self):
+        """Test that different users can have separate itinerary items without interference."""
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
-
         self.client.logout()
         new_user = get_user_model().objects.create_user(username="user3", password="Test@123")
         self.client.login(username="user3", password="Test@123")
-
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, "New Spot", self.address, self.category]))
-
         self.assertEqual(ItineraryItem.objects.filter(user=self.user).count(), 1)
         self.assertEqual(ItineraryItem.objects.filter(user=new_user).count(), 1)
-        
-        
+
+
 class AuthTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -470,7 +466,6 @@ class InfoViewsTestCase(TestCase):
         response = self.client.get(reverse('addToFav'), {'city': 'Paris', 'country': 'France'})
         self.assertEqual(response.json()['data'], 'added')
         self.assertTrue(FavCityEntry.objects.filter(city='Paris', country='France', user=self.user).exists())
-    
         response = self.client.get(reverse('addToFav'), {'city': 'Paris', 'country': 'France'})
         self.assertEqual(response.json()['data'], 'removed')
         self.assertFalse(FavCityEntry.objects.filter(city='Paris', country='France', user=self.user).exists())
@@ -482,7 +477,7 @@ class InfoViewsTestCase(TestCase):
     def test_add_to_fav_unauthenticated_user(self):
         self.client.logout()
         response = self.client.get(reverse('addToFav'), {'city': 'Berlin', 'country': 'Germany'})
-        self.assertEqual(response.status_code, 302) 
+        self.assertEqual(response.status_code, 302)
 
     def test_info_page(self):
         response = self.client.get(reverse('info_page'), {'city': 'Paris', 'country': 'France'})

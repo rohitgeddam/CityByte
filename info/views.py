@@ -170,26 +170,12 @@ def profile_page(request):
         {"favCities": favCities, "popularCities": popularCities},
     )
 
+# The add_to_itinerary view requires the user to be logged in
 @login_required
 def add_to_itinerary(request, city, spot_name, address, category):
-    # if request.method != 'POST':
-    #     return JsonResponse({'error': 'Invalid request method.'}, status=405)
-    # # Validate inputs from the request body
-    # spot_name = request.POST.get('spot_name', spot_name)
-    # address = request.POST.get('address', address)
-    # category = request.POST.get('category', category)
-    # city = request.POST.get('city', city)
-    # if not spot_name: 
-    #     return JsonResponse({'error': 'Spot name cannot be empty.'}, status=400)
-    # if not city: 
-    #     return JsonResponse({'error': 'City cannot be empty.'}, status=400)
-    # if not spot_name: 
-    #     return JsonResponse({'error': 'Spot name cannot be empty.'}, status=400)
-    # if not address: 
-    #     return JsonResponse({'error': 'Address cannot be empty.'}, status=400)
-    # if not category: 
-    #     return JsonResponse({'error': 'Category cannot be empty.'}, status=400)
+    # Check if the itinerary item already exists for the user; avoid duplicates
     if not ItineraryItem.objects.filter(user=request.user, city=city, spot_name=spot_name).exists():
+        # Create a new itinerary item if it doesn't exist
         ItineraryItem.objects.create(
             user=request.user,
             city=city,
@@ -197,17 +183,24 @@ def add_to_itinerary(request, city, spot_name, address, category):
             address=address,
             category=category
         )
+        # Return a success response when the item is added
         return JsonResponse({'status': 'success', 'message': 'Added to itinerary.'})
+    # Return an error response if the item is already in the itinerary
     return JsonResponse({'status': 'error', 'message': 'Already in itinerary.'})
 
+# The remove_from_itinerary view requires the user to be logged in
 @login_required
 def remove_from_itinerary(request, city, spot_name):
+    # Query for the specific itinerary item by user, city, and spot name
     item = ItineraryItem.objects.filter(user=request.user, city=city, spot_name=spot_name).first()
     
+    # Check if the item exists and delete it if found
     if item:
         item.delete()
+        # Return a success response when the item is removed
         return JsonResponse({'status': 'success', 'message': 'Removed from itinerary.'})
     else:
+        # Return an error response if the item is not found
         return JsonResponse({'status': 'error', 'message': 'Item not found.'}, status=404)
 
 @require_http_methods(["GET"])

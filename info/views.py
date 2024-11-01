@@ -20,31 +20,29 @@ from .models import ItineraryItem
 
 @login_required()
 def addTofav(request):
+    """Toggles the favorite status of a city for the logged-in user, adding it if not present
+       or removing it if it already exists, and returns the action status as a JSON response."""
 
     city = request.GET.get("city")
     country = request.GET.get("country")
-
     if not city or not country:
         return JsonResponse({"data": None})
-
     data = "removed"
-
-    # if count is 0 add to list else remove
     count = FavCityEntry.objects.filter(city=city, country=country, user=request.user).count()
-
     if count > 0:
         FavCityEntry.objects.filter(city=city, country=country, user=request.user).delete()
     else:
         FavCityEntry.objects.create(city=city, country=country, user=request.user)
         data = "added"
-
     return JsonResponse({"data": data})
 
 
 @require_http_methods(["GET"])
 def place_photo(request):
-    photo_link = cache.get(f"photo-link-{request.GET.get('fsq_id')}")
+    """Fetches and caches the photo link for a specific place identified by fsq_id,
+       then redirects the user to that photo link."""
 
+    photo_link = cache.get(f"photo-link-{request.GET.get('fsq_id')}")
     if not photo_link:
         photo_link = FourSquarePlacesHelper().get_place_photo(fsq_id=request.GET.get("fsq_id"))
         cache.set(f"photo-link-{request.GET.get('fsq_id')}", photo_link)
@@ -53,6 +51,9 @@ def place_photo(request):
 
 @require_http_methods(["GET", "POST"])
 def info_page(request):
+    """Handles GET and POST requests for city information, including weather, dining, and comments.
+       Saves user comments and fetches various city-related data from caches or external APIs."""
+
     city = request.GET.get("city")
     country = request.GET.get("country")
 
@@ -67,16 +68,12 @@ def info_page(request):
             form.country = country
             print(form)
             form.save()
-
     commentForm = CommentForm()
-
     # if (
     #     CitySearchRecord.objects.filter(city_name=city, country_name=country).count()
     #     == 0
     # ):
     CitySearchRecord.objects.create(city_name=city, country_name=country)
-
-    # try cache first
     weather_info = cache.get(f"{city}-weather")
     if not weather_info:
         try:
@@ -93,24 +90,20 @@ def info_page(request):
                 .strftime("%I:%M")
             )
             weather_info["ts"] = datetime.fromtimestamp(weather_info["ts"]).strftime("%m-%d-%Y, %H:%M")
-
             cache.set(f"{city}-weather", weather_info)
         except Exception:
             weather_info = {}
-
     dining_info = cache.get(f"{city}-dinning")
     if not dining_info:
         dining_info = FourSquarePlacesHelper().get_places(
             city=f"{city}, {country}", categories="13065", sort="RELEVANCE", limit=5
         )
         cache.set(f"{city}-dinning", dining_info)
-
     airport_info = cache.get(f"{city}-airport")
     if not airport_info:
         airport_info = FourSquarePlacesHelper().get_places(
             city=f"{city}, {country}", categories="19040", sort="RELEVANCE", limit=5
         )
-
         cache.set(f"{city}-airport", airport_info)
 
     outdoor_info = cache.get(f"{city}-outdoor")
@@ -118,22 +111,17 @@ def info_page(request):
         outdoor_info = FourSquarePlacesHelper().get_places(
             city=f"{city}, {country}", categories="16000", sort="RELEVANCE", limit=5
         )
-
         cache.set(f"{city}-outdoor", outdoor_info)
-
     arts_info = cache.get(f"{city}-arts")
     if not arts_info:
         arts_info = FourSquarePlacesHelper().get_places(
             city=f"{city}, {country}", categories="10000", sort="RELEVANCE", limit=5
         )
-
         cache.set(f"{city}-arts", arts_info)
-
     photo_link = cache.get(f"{city}-photolink")
     if not photo_link:
         photo_link = UnplashCityPhotoHelper().get_city_photo(city=city)
         cache.set(f"{city}-photolink", photo_link)
-
     comments = Comment.objects.filter(city=city, country=country).order_by("-created_on")
     isInFav = True if FavCityEntry.objects.filter(city=city, country=country, user=request.user).count() > 0 else False
     return render(
@@ -157,7 +145,7 @@ def info_page(request):
 
 @login_required()
 def profile_page(request):
-
+    '''Renders the profile page for the logged-in user, displaying their favorite cities and the most popular cities based on search records.'''
     favCities = FavCityEntry.objects.filter(user=request.user)
     popularCities = (
         CitySearchRecord.objects.values("city_name")
@@ -170,12 +158,10 @@ def profile_page(request):
         {"favCities": favCities, "popularCities": popularCities},
     )
 
-# The add_to_itinerary view requires the user to be logged in
+
 @login_required
 def add_to_itinerary(request, city, spot_name, address, category):
-    """
-    Adds a place to the user's itinerary if it's not already in the itinerary.
-    """
+    """Adds a place to the user's itinerary if it's not already in the itinerary."""
     if not ItineraryItem.objects.filter(user=request.user, city=city, spot_name=spot_name).exists():
         ItineraryItem.objects.create(
             user=request.user,
@@ -187,12 +173,10 @@ def add_to_itinerary(request, city, spot_name, address, category):
         return JsonResponse({'status': 'success', 'message': 'Added to itinerary.'})
     return JsonResponse({'status': 'error', 'message': 'Already in itinerary.'})
 
-# The remove_from_itinerary view requires the user to be logged in
+
 @login_required
 def remove_from_itinerary(request, city, spot_name):
-    """
-    Removes a place from the user's itinerary if it exists.
-    """
+    """Removes a place from the user's itinerary if it exists."""
     item = ItineraryItem.objects.filter(user=request.user, city=city, spot_name=spot_name).first()
     if item:
         item.delete()
@@ -200,11 +184,10 @@ def remove_from_itinerary(request, city, spot_name):
     else:
         return JsonResponse({'status': 'error', 'message': 'Item not found.'}, status=404)
 
+
 @require_http_methods(["GET"])
 def itinerary_page(request):
-    """
-    Retrieves and displays the itinerary items for the specified city and user.
-    """
+    """Retrieves and displays the itinerary items for the specified city and user."""
     city = request.GET.get("city")
     country = request.GET.get("country")
     itinerary_items = ItineraryItem.objects.filter(user=request.user, city=city).order_by("added_on")

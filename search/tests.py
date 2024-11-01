@@ -179,6 +179,48 @@ class ItineraryTests(TestCase):
     #         'category': self.category,
     #     })
     #     self.assertEqual(response.status_code, 400)
+    def test_json_response_structure_on_successful_add(self):
+        """Test the structure of the JSON response on successful item addition."""
+        response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
+        json_response = response.json()
+        self.assertIn('status', json_response)
+        self.assertIn('message', json_response)
+        self.assertEqual(json_response['status'], 'success')
+    
+    def test_json_response_structure_on_failed_remove(self):
+        """Test JSON response structure on attempting to remove a non-existent item."""
+        response = self.client.post(reverse('info:remove_from_itinerary', args=["NonExistentCity", "NonExistentSpot"]))
+        json_response = response.json()
+        self.assertEqual(response.status_code, 404)
+        self.assertIn('status', json_response)
+        self.assertIn('message', json_response)
+        self.assertEqual(json_response['status'], 'error')
+    
+    def test_unauthenticated_user_add_attempt(self):
+        """Test that an unauthenticated user cannot add items to the itinerary."""
+        self.client.logout()  # Log out to simulate an unauthenticated user
+        response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
+        self.assertEqual(response.status_code, 302)
+    
+    def test_case_insensitive_city_and_category(self):
+        """Test that city and category are case insensitive."""
+        response_upper = self.client.post(reverse('info:add_to_itinerary', args=[self.city.upper(), self.spot_name, self.address, self.category.upper()]))
+        response_lower = self.client.post(reverse('info:add_to_itinerary', args=[self.city.lower(), self.spot_name, self.address, self.category.lower()]))
+        self.assertEqual(response_upper.status_code, 200)
+        self.assertEqual(response_lower.status_code, 200)
+
+    def test_special_characters_in_spot_name(self):
+        """Test adding an itinerary item with special characters in the spot name."""
+        special_spot_name = "KBR Park & Zoo @ Hyderabad!"
+        response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, special_spot_name, self.address, self.category]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_re_add_removed_item(self):
+        """Test re-adding an item that was previously removed from the itinerary."""
+        response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
+        self.client.post(reverse('info:remove_from_itinerary', args=[self.city, self.spot_name]))
+        response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
+        self.assertEqual(response.status_code, 200)
 
     def test_remove_multiple_items(self):
         self.client.post(reverse('info:add_to_itinerary', args=[self.city, "KBR Park", self.address, self.category]))
@@ -200,15 +242,6 @@ class ItineraryTests(TestCase):
         self.assertEqual(item.spot_name, self.spot_name)
         self.assertEqual(item.address, self.address)
         self.assertEqual(item.category, self.category)
-
-    # def test_itinerary_item_addition_invalid_category(self):
-    #     """Test adding an itinerary item with an invalid (empty) spot name."""
-    #     response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, 'Park']), {
-    #         'city': self.city , 
-    #         'address': self.address,
-    #         'category': '',
-    #     })
-    #     self.assertEqual(response.status_code, 400)
 
     def test_add_to_itinerary_without_login(self):
         self.client.logout()
@@ -253,14 +286,6 @@ class ItineraryTests(TestCase):
         )
         self.assertEqual(str(item), f"{self.spot_name} in {self.city} - {self.user.username}")
 
-    # def test_itinerary_item_addition_invalid_address(self):
-    #     """Test adding an itinerary item with an invalid (empty) spot name."""
-    #     response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, 'Kbr National Park (LV Prasad Marg), Hyderabad 591226, Telangana',self.category ]), {
-    #         'city': self.city , 
-    #         'address': '',
-    #         'category': self.category,
-    #     })
-    #     self.assertEqual(response.status_code, 400)
 
     def test_added_on_field(self):
         item = ItineraryItem.objects.create(
@@ -277,7 +302,7 @@ class ItineraryTests(TestCase):
         # Check that a user can have multiple unique items
         for i in range(3):
             self.client.post(reverse('info:add_to_itinerary', args=[self.city, f"Spot {i}", self.address, self.category]))
-        self.assertEqual(ItineraryItem.objects.count(), 3)  # Original + 3 new
+        self.assertEqual(ItineraryItem.objects.count(), 3) 
 
     def test_itinerary_item_category(self):
         response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, 'New Category']))
@@ -295,21 +320,6 @@ class ItineraryTests(TestCase):
 
         self.assertEqual(ItineraryItem.objects.filter(user=self.user).count(), 1)
         self.assertEqual(ItineraryItem.objects.filter(user=new_user).count(), 1)
-
-    # def test_itinerary_item_addition_invalid_spot_name(self):
-    #     """Test adding an itinerary item with an invalid (empty) spot name."""
-    #     response = self.client.post(reverse('info:add_to_itinerary', args=[self.city, 'KBR Park', self.address, self.category]), {
-    #         'spot_name': '', 
-    #         'address': self.address,
-    #         'category': self.category,
-    #     })
-    #     self.assertEqual(response.status_code, 400)
-    
-    # def test_remove_itinerary_invalid_method(self):
-    #     """Test removing an itinerary item with an invalid (non-POST) request method."""
-    #     response = self.client.get(reverse('info:add_to_itinerary', args=[self.city, self.spot_name, self.address, self.category]))
-    #     self.assertEqual(response.status_code, 405)
-    #     self.assertJSONEqual(str(response.content, encoding='utf-8'), {'error': 'Invalid request method.'})
         
         
 class AuthTests(TestCase):
@@ -490,4 +500,4 @@ class InfoViewsTestCase(TestCase):
         response = self.client.get(reverse('profile_page'))
         self.assertContains(response, 'Paris')
 
-    # should add more tests relating to the profile page
+#     # should add more tests relating to the profile page
